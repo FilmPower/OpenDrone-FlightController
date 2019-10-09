@@ -1,7 +1,5 @@
 import subprocess
 import os.path
-import xmltodict
-import json
 import os
 
 def is_non_zero_file(fpath):
