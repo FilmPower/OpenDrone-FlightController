@@ -15,7 +15,8 @@ So this is an open source project for a self-flying and navigating drone.
 We also got an Open-source Frame Created with ❤️ by our 3D Printer  
 
 Used technologies:  
-* Android - Our App runs on Android  
+* Android - Our App runs on Android but ->
+* know we have also an Cross-Platform App with React Native
 * C++ - Our flight controller runs on C++  
 * Raspberry Pi - The brain of the drone  
 ---  
