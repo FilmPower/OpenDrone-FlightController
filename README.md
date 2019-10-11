@@ -38,7 +38,7 @@ Used technologies:
 * Reading Sensors ✔  
 * Filtering sensor values ✔ 
 * PID Controller ⏳  
-  * Ptch / Roll  ✔ (Works but needs some tuning)
+  * Pitch / Roll  ✔ (Works but needs some tuning)
   * Yaw ⏳
   * Hight ⏳
   * Position ⏳
