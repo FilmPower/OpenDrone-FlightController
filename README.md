@@ -38,7 +38,7 @@ Used technologies:
 * Reading Sensors ✔  
 * Filtering sensor values ✔ 
 * PID Controller ⏳  
-  * Ptch / Roll  ✔ 
+  * Ptch / Roll  ✔ (Works but needs some tuning)
   * Yaw ⏳
   * Hight ⏳
   * Position ⏳
@@ -61,7 +61,7 @@ Used technologies:
 * BMP280 ✔  
 * BMP388 ⏳  
 ### GPS
-* BN-880 ⏳ 
+* BN-880 ✔ 
 ### Other
 * HC-SR04 ✔  
 ---  
