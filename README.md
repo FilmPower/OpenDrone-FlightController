@@ -16,7 +16,7 @@ We also got an Open-source Frame Created with ❤️ by our 3D Printer
 
 Used technologies:  
 * Android - Our App runs on Android but ->
-* know we have also an Cross-Platform App with React Native
+* now we have also an Cross-Platform App with React Native
 * C++ - Our flight controller runs on C++  
 * Raspberry Pi - The brain of the drone  
 ---  
@@ -41,7 +41,7 @@ Used technologies:
 * PID Controller ⏳  
   * Ptch / Roll  ✔ 
   * Yaw ⏳
-  * Hight ⏳
+  * Height ⏳
   * Position ⏳
 * Communtication ✔ works but we might change the protocoll
 * Fly it to the moon and back ⏳
