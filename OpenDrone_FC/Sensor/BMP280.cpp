@@ -21,7 +21,7 @@ using namespace std;
 #define BMP280_TEMPDATA     0xFA
 
 /* BMP280 default address */
-#define BMP280_I2CADDR 0x76
+#define BMP280_I2CADDR 0x77
 #define BMP280_CHIPID  0xD0
 
 /* BMP280 Registers */

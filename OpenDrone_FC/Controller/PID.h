@@ -57,6 +57,7 @@ private:
 	float pid_i_mem_pitch = 0, pid_pitch_setpoint = 0, pid_output_pitch, pid_last_pitch_d_error = 0;
 	float pid_i_mem_yaw = 0, pid_yaw_setpoint = 0, pid_output_yaw, pid_last_yaw_d_error = 0;
 	float pid_output_height, pid_last_height_error;
+	float pid_last_start_error = 0.0;
 
 	int esc_1, esc_2, esc_3, esc_4;
 	int throttle = 1050;
@@ -66,14 +67,15 @@ private:
 	bool isStarting = true;		//Used to start the drone (up to 30cm)
 	bool heightControl = false;	//If heightControl should be used
 	bool hasHeightControl = false;
-	int wantedDistanceStart = 150;	//The wanted distance when auto-starting the drone
+	int wantedDistanceStart = 120;	//The wanted distance when auto-starting the drone
 	double maxBaroVal = 0.0;
 	bool emergencyThrottleSet = false;
-	int wantedDistance = 150;
+	int wantedDistance = 120;
+	double wantedPressure = 0;
 
-	float pid_p_gain_roll = 2.1; //1.25             //Gain setting for the roll P-controller 0.65
-	float pid_i_gain_roll = 0.011; // 0.05;          //Gain setting for the roll I-controller 0.0006
-	float pid_d_gain_roll = 65; // 90;              //Gain setting for the roll D-controller 60
+	float pid_p_gain_roll = 2.0; //1.25             //Gain setting for the roll P-controller 0.65
+	float pid_i_gain_roll = 0.01; // 0.05;          //Gain setting for the roll I-controller 0.0006
+	float pid_d_gain_roll = 60; // 90;              //Gain setting for the roll D-controller 60
 	int pid_max_roll = 1000;						//Maximum output of the PID-controller (+/-)
 
 	float pid_p_gain_pitch = pid_p_gain_roll;		//Gain setting for the pitch P-controller.
@@ -86,11 +88,12 @@ private:
 	float pid_d_gain_yaw = 0.00;					//Gain setting for the yaw D-controller.
 	int pid_max_yaw = 200;							//Maximum output of the PID-controller (+/-)
 
-	//Used for start automatic
-	float pid_p_gain_height = 1.75;
-	float pid_d_gain_height = 2.75;
-	float pid_p_gain_start = 4;
-	float pid_d_gain_start = 6;
+	float pid_p_gain_start = 3;
+	float pid_d_gain_start = 11;
+
+	float pid_p_gain_heightHold = 0.5;
+	float pid_d_gain_heightHold = 0.9;
+	float pid_last_heightHold_error = 0.0;
 
 	double* curPitchRollYaw;
 

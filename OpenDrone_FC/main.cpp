@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 		if (strcmp(argv[1], "-d") == 0) {
 			startFC(1);
 		}
-		else if (strcmp(argv[1], "-l") == 0) {
+		else if (strcmp(argv[1], "-t") == 0) {
 			startFC(2);
 		}
 		else {

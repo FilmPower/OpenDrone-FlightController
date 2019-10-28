@@ -10,6 +10,8 @@
 #include <chrono>
 #include <ctime>  
 
+//TODO: Remove unnecessary code/variables/methods (ArmMotor, ...)
+
 PID *PID::instance = 0;
 
 PID::PID(Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u)
@@ -63,9 +65,19 @@ void PID::calcValues()
 	while (run) {
 		calcPid();
 
-		if (throttle + pid_output_height < 1800 && throttle + pid_output_height > 1200) {
-			throttle = throttle + pid_output_height;
+		if (startUp)
+		{
+			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
+				throttle = throttle + pid_output_height;
+			}
 		}
+		else if (heightControl) 
+		{
+			if (throttle + pid_output_height < 1525 && throttle + pid_output_height > 1200) {
+				throttle = throttle + pid_output_height;
+			}
+		}
+
 		esc_1 = throttle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
 		esc_2 = throttle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
 		esc_3 = throttle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
@@ -87,9 +99,8 @@ void PID::calcValues()
 		pwm->SetSpeed(2, esc_2);	//Rear left
 		pwm->SetSpeed(3, esc_3);	//Rear right
 		pwm->SetSpeed(0, esc_4);	//Front right
-		std::cout << "FR: " << esc_4 << " FL: " << esc_1 << " RL: " << esc_2 << " RR: " << esc_3 << std::endl;
+		//std::cout << "FR: " << esc_4 << " FL: " << esc_1 << " RL: " << esc_2 << " RR: " << esc_3 << std::endl;
 
-		//TODO: We may have to uncomment this line, of the pid does not work
 		delay(5);
 		log = true;
 	}
@@ -162,33 +173,20 @@ void PID::calcPid() {
 	//Throttle calculations - Altitude Hold & Autostart
 	if (hasHeightControl)
 	{
-		double curBarVal = barometer->getBarometerValues()[1];
-		//int curDistance = ultrasonic->getDistance();
-		int curDistance = 200;
+		int curDistance = ultrasonic->getDistance();
+		std::cout << curDistance << std::endl;
+		std::cout.flush();
 
-		//TODO: Remove later
-		/*//First Security-Step to test if the GY-US42 returns correct values when the drone is flying
-		if (curBarVal < maxBaroVal || curDistance > 350)
-		{
-			if (!emergencyThrottleSet)
-			{
-				std::cout << "Max: " << maxBaroVal << " Min: " << curBarVal << " Distance: " << curDistance << std::endl;
-				std::cout.flush();
-				landDrone();
-				emergencyThrottleSet = true;
-			}
-		}*/
-		startUp = false;
-		if (startUp) 
+		if (startUp)
 		{
 			pid_error_temp = wantedDistanceStart - curDistance;
 
 			bool firstTimeElse = false;
 			if (isStarting) {
-				pid_output_height = pid_p_gain_start * pid_error_temp + pid_d_gain_start * ((pid_error_temp - pid_last_height_error));
-				pid_last_height_error = pid_error_temp;
+				pid_output_height = pid_p_gain_start * pid_error_temp + pid_d_gain_start * ((pid_error_temp - pid_last_start_error));
+				pid_last_start_error = pid_error_temp;
 
-				if (curDistance > 30) 
+				if (curDistance > 50)
 				{
 					std::cout << "Drone reached 30cm! Switching PID ..." << std::endl;
 					std::cout.flush();
@@ -197,42 +195,44 @@ void PID::calcPid() {
 					firstTimeElse = true;
 				}
 			}
-			else 
+			else
 			{
-				pid_output_height = pid_p_gain_height * pid_error_temp + pid_d_gain_height * ((pid_error_temp - pid_last_height_error));
-				pid_last_height_error = pid_error_temp;
+				throttle = 1525;
+				pid_output_height = 0.0;
 
 				if (firstTimeElse) {
 					//This is done to prevent the drone from crashing after reaching the 30cm
 					std::cout << "Drone IsStarting-Else called the first time! Trying to reach the wanted Start-Height ..." << std::endl;
 					std::cout.flush();
-					throttle = 1350;
 					firstTimeElse = false;
 				}
 
-				if (curDistance > wantedDistanceStart - 10)
+				if (curDistance > wantedDistanceStart)
 				{
 					std::cout << "Drone reached the wanted Start-Height! Switching to default Heightcontrol ..." << std::endl;
 					std::cout.flush();
 					startUp = false;
 					heightControl = true;
+					throttle = 1400;
+					wantedPressure = barometer->getBarometerValues()[1];
 				}
 			}
 		}
-		else if (heightControl) 
+		else if (heightControl)
 		{
-			//TODO: Add Barometer to change the height
-			pid_error_temp = wantedDistance - curDistance;
+			//Stable the drone at the given wantedPressure (for testing this value is fixed at 1.50m)
+			double curPressure = barometer->getBarometerValues()[1];
+			pid_error_temp = (wantedPressure - curPressure);
 
-			pid_output_height = pid_p_gain_height * pid_error_temp + pid_d_gain_height * ((pid_error_temp - pid_last_height_error));
-			pid_last_height_error = pid_error_temp;
+			pid_output_height = pid_p_gain_heightHold * pid_error_temp + pid_d_gain_heightHold * ((pid_error_temp - pid_last_heightHold_error));
+			pid_last_heightHold_error = pid_error_temp;
 		}
 		else
 		{
 			pid_output_height = 0.0;
 		}
 	}
-	else 
+	else
 	{
 		pid_output_height = 0.0;
 	}
@@ -294,16 +294,15 @@ void PID::setRun(bool curRun) {
 	@params float curThrottle
 */
 void PID::setThrottle(float curThrottle) {
-	//TODO: Change the wanted height/baroVal by analyzing the curThrottle variable
 	if (curThrottle > 1100 && curThrottle < 1700) {
-		/*if (curThrottle < 1400 || curThrottle > 1600) {
+		if (curThrottle < 1400 || curThrottle > 1500) {
 			//If the user changes the throttle, the heightControl should be turned off
 			if (hasHeightControl) {
 				std::cout << "HeightControl is turned off! Manual control necessary ... " << std::endl;
 				std::cout.flush();
 			}
 			hasHeightControl = false;
-		}*/
+		}
 		throttle = curThrottle;
 	}
 }
