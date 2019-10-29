@@ -1,6 +1,6 @@
 # !! Work in Progress !!  
 ## Partners
-<img src="partners/CONRAD_logo.png" alt="drawing" width="200"/>
+<img src="partners/CONRAD_logo.png" alt="Conrad" width="200"/>
 
 ## Infomation
   
