@@ -1,4 +1,7 @@
 # !! Work in Progress !!  
+## Partners
+<img src="partners/CONRAD_logo.png" alt="drawing" width="200"/>
+
 ## Infomation
   
 Open Drone Open-source Project  
