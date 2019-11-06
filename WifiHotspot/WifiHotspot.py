@@ -6,9 +6,14 @@ def is_non_zero_file(fpath):
    return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
 
 def loadJSON():
-    with open('/etc/accesspoint/accesspoint.json', 'w+') as f:
-        f.write('{"ssid": "' + "OpenDrone" + '", "inet": "eth0", "wlan": "wlan0", "password": "' + "1234567890" + '", "netmask": "255.255.255.0", "ip": "192.168.1.254"}')
-        f.seek(0)    
+   if 'eth0' in os.listdir('/sys/class/net'):
+       with open('/etc/accesspoint/accesspoint.json', 'w+') as f:
+           f.write('{"ssid": "' + "OpenDrone" + '", "inet": "eth0", "wlan": "wlan0", "password": "' + "1234567890" + '", "netmask": "255.255.255.0", "ip": "192.168.1.254"}')
+           f.seek(0)
+   else:
+       with open('/etc/accesspoint/accesspoint.json', 'w+') as f:
+           f.write('{"ssid": "' + "OpenDrone" + '", "wlan": "wlan0", "password": "' + "1234567890" + '", "netmask": "255.255.255.0", "ip": "192.168.1.254"}')
+           f.seek(0)
 
 subprocess.call('sudo pyaccesspoint stop', shell=True)
 if (os.path.isfile('/etc/accesspoint/accesspoint.json') == True):
