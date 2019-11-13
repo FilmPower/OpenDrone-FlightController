@@ -222,7 +222,7 @@ void PID::calcPid() {
 		{
 			//Stable the drone at the given wantedPressure (for testing this value is fixed at 1.50m)
 			double curPressure = barometer->getBarometerValues()[1];
-			pid_error_temp = (wantedPressure - curPressure);
+			pid_error_temp = (curPressure - wantedPressure);
 
 			pid_output_height = pid_p_gain_heightHold * pid_error_temp + pid_d_gain_heightHold * ((pid_error_temp - pid_last_heightHold_error));
 			pid_last_heightHold_error = pid_error_temp;
