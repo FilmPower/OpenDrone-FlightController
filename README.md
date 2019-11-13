@@ -1,6 +1,8 @@
+<img src="images/Opendrone_Logo_0205x.png" alt="OpenDrone"/>  
+
 # !! Work in Progress !!  
 ## Partners
-<img src="partners/CONRAD_logo.png" alt="Conrad" width="200"/>
+<img src="images/CONRAD_logo.png" alt="Conrad" width="200"/>
 
 ## Infomation
   
