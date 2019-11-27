@@ -7,11 +7,7 @@
  * 	@version 0.0.2 26.06.2019
  */
 #include "FlightController.h"
-#include "Sensor/AbstractSensor/Barometer.h"
-#include "Sensor/AbstractSensor/Ultrasonic.h"
 #include "Sensor/BMP280.h"
-#include "Sensor/BNO080.h"
-#include "Sensor/HCSR04.h"
 #include "Sensor/GYUS42.h"
 
 #include "Network/TCPServer.h"
@@ -29,7 +25,6 @@
 #include <fstream>
 #include <signal.h>
 using namespace std;
-
 
 FlightController::FlightController(int argIn)
 {

@@ -3,9 +3,9 @@
 * 
 * Some classes/methods are not
 * described or undone!
-* The Sensor classes are depricated not described yet, because
+* The Sensor classes are depricated and not described yet, because
 * many of them are currently not in use!
-*    --> HCSR04, BNO080, BMP280 are currently in use on the drone!
+*    --> GYUS42, BNO080, BMP280 are currently in use on the drone!
 *
 * !! WORK IN PROGRESS !!
 ***********************************************************************/

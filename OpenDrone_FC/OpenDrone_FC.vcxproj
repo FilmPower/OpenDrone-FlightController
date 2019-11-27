@@ -83,16 +83,9 @@
     <ClCompile Include="Network\Command.cpp" />
     <ClCompile Include="Network\Modbus.cpp" />
     <ClCompile Include="Network\TCPServer.cpp" />
-    <ClCompile Include="Sensor\BMF055.cpp" />
-    <ClCompile Include="Sensor\BMM150.cpp" />
-    <ClCompile Include="Sensor\BMP180.cpp" />
     <ClCompile Include="Sensor\BMP280.cpp" />
-    <ClCompile Include="Sensor\BMP388.cpp" />
     <ClCompile Include="Sensor\BNO080.cpp" />
     <ClCompile Include="Sensor\GYUS42.cpp" />
-    <ClCompile Include="Sensor\MPU6050.cpp" />
-    <ClCompile Include="Sensor\HMC5883L.cpp" />
-    <ClCompile Include="Sensor\HCSR04.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\Calibration.h" />
@@ -102,10 +95,7 @@
     <ClInclude Include="Database\SQLite.h" />
     <ClInclude Include="Network\Command.h" />
     <ClInclude Include="Network\Modbus.h" />
-    <ClInclude Include="Sensor\BMF055.h" />
-    <ClInclude Include="Sensor\BMM150.h" />
     <ClInclude Include="Sensor\BMP280.h" />
-    <ClInclude Include="Sensor\BMP388.h" />
     <ClInclude Include="Filter\Filter.h" />
     <ClInclude Include="FlightController.h" />
     <ClInclude Include="Motor\PCA9685.h" />
@@ -115,12 +105,8 @@
     <ClInclude Include="Sensor\AbstractSensor\Barometer.h" />
     <ClInclude Include="Sensor\AbstractSensor\Gyroscope.h" />
     <ClInclude Include="Sensor\AbstractSensor\Magnetometer.h" />
-    <ClInclude Include="Sensor\BMP180.h" />
     <ClInclude Include="Sensor\BNO080.h" />
     <ClInclude Include="Sensor\GYUS42.h" />
-    <ClInclude Include="Sensor\MPU6050.h" />
-    <ClInclude Include="Sensor\HMC5883L.h" />
-    <ClInclude Include="Sensor\HCSR04.h" />
     <ClInclude Include="Sensor\AbstractSensor\Ultrasonic.h" />
   </ItemGroup>
   <ItemGroup>
