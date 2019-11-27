@@ -91,8 +91,6 @@ private:
 	float pid_p_gain_start = 3;
 	float pid_d_gain_start = 11;
 
-	float pid_p_gain_heightHold = 0.5;
-	float pid_d_gain_heightHold = 0.9;
 	float pid_last_heightHold_error = 0.0;
 
 	double* curPitchRollYaw;

@@ -12,6 +12,9 @@
 
 //TODO: Remove unnecessary code/variables/methods (ArmMotor, ...)
 
+float pid_p_gain_heightHold = 2.5;
+float pid_d_gain_heightHold = 3.3;
+
 PID *PID::instance = 0;
 
 PID::PID(Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u)
@@ -65,23 +68,27 @@ void PID::calcValues()
 	while (run) {
 		calcPid();
 
+		int curThrottle = 0;
 		if (startUp)
 		{
 			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
 				throttle = throttle + pid_output_height;
+				curThrottle = throttle;
 			}
 		}
 		else if (heightControl) 
 		{
 			if (throttle + pid_output_height < 1525 && throttle + pid_output_height > 1200) {
-				throttle = throttle + pid_output_height;
+				curThrottle = throttle + pid_output_height;
 			}
 		}
 
-		esc_1 = throttle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
-		esc_2 = throttle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
-		esc_3 = throttle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
-		esc_4 = throttle - pid_output_pitch - pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 4 (front-left - CW)
+		std::cout << throttle << " " << curThrottle << "\n";
+
+		esc_1 = curThrottle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
+		esc_2 = curThrottle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
+		esc_3 = curThrottle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
+		esc_4 = curThrottle - pid_output_pitch - pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 4 (front-left - CW)
 
 		int speedMin = 1100;
 		if (esc_1 < speedMin) esc_1 = speedMin;           //Keep the motors running.
