@@ -31,11 +31,13 @@ public:
 	void setRollSetpoint(int curRollSetpoint);
 	void setYawSetpoint(int curYawSetpoint);
 	void setRun(bool curRun);
+	void landDrone();
 	void armMotor();
 	bool isInit();
 	void interruptPid();
 	int* getThrottles();
 	float *getPIDVals();
+	double* getAltVals();
 	void updateHeightControl();
 
 	Orientation *getOrientatin();
@@ -55,14 +57,25 @@ private:
 	float pid_i_mem_pitch = 0, pid_pitch_setpoint = 0, pid_output_pitch, pid_last_pitch_d_error = 0;
 	float pid_i_mem_yaw = 0, pid_yaw_setpoint = 0, pid_output_yaw, pid_last_yaw_d_error = 0;
 	float pid_output_height, pid_last_height_error;
+	float pid_last_start_error = 0.0;
 
 	int esc_1, esc_2, esc_3, esc_4;
 	int throttle = 1050;
-	bool heightControl = false;
 
-	float pid_p_gain_roll = 2.1; //1.25             //Gain setting for the roll P-controller 0.65
-	float pid_i_gain_roll = 0.011; // 0.05;          //Gain setting for the roll I-controller 0.0006
-	float pid_d_gain_roll = 65; // 90;              //Gain setting for the roll D-controller 60
+	/* Altitude Hold */
+	bool startUp = true;		//Used to bring the drone to the wanted start-height (default 150cm)
+	bool isStarting = true;		//Used to start the drone (up to 30cm)
+	bool heightControl = false;	//If heightControl should be used
+	bool hasHeightControl = false;
+	int wantedDistanceStart = 120;	//The wanted distance when auto-starting the drone
+	double maxBaroVal = 0.0;
+	bool emergencyThrottleSet = false;
+	int wantedDistance = 120;
+	double wantedPressure = 0;
+
+	float pid_p_gain_roll = 2.0; //1.25             //Gain setting for the roll P-controller 0.65
+	float pid_i_gain_roll = 0.01; // 0.05;          //Gain setting for the roll I-controller 0.0006
+	float pid_d_gain_roll = 60; // 90;              //Gain setting for the roll D-controller 60
 	int pid_max_roll = 1000;						//Maximum output of the PID-controller (+/-)
 
 	float pid_p_gain_pitch = pid_p_gain_roll;		//Gain setting for the pitch P-controller.
@@ -75,11 +88,14 @@ private:
 	float pid_d_gain_yaw = 0.00;					//Gain setting for the yaw D-controller.
 	int pid_max_yaw = 200;							//Maximum output of the PID-controller (+/-)
 
-	float pid_p_gain_height = 3;
-	float pid_d_gain_height = 15;
+	float pid_p_gain_start = 3;
+	float pid_d_gain_start = 11;
+
+	float pid_last_heightHold_error = 0.0;
+
+	double* curPitchRollYaw;
 
 	float pid_cur_val = 0;
-	double wantedDistane = 200;
 
 	float maxAngle = 45;
 	float factorControl = maxAngle / 480;			//Maximum 45° (480 steps)

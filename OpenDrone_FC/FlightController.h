@@ -7,14 +7,14 @@
  * 	@version 0.0.2 26.06.2019
  */
 #pragma once
-#include "Sensor/AbstractSensor/Barometer.h"
-#include "Sensor/AbstractSensor/Ultrasonic.h"
-#include "Network/TCPServer.h"
-#include "Controller/Orientation.h"
-#include "Controller/Exit.h"
-#include "Controller/PID.h"
-#include "Database/SQLite.h"
-#include "Motor/PWMMotorTest.h"
+class Orientation;
+class Barometer;
+class Ultrasonic;
+class TCPServer;
+class Exit;
+class PID;
+class PWMMotorTest;
+class SQLite;
 
 class FlightController
 {

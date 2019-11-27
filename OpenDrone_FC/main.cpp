@@ -3,9 +3,9 @@
 * 
 * Some classes/methods are not
 * described or undone!
-* The Sensor classes are depricated not described yet, because
+* The Sensor classes are depricated and not described yet, because
 * many of them are currently not in use!
-*    --> HCSR04, BNO080, BMP280 are currently in use on the drone!
+*    --> GYUS42, BNO080, BMP280 are currently in use on the drone!
 *
 * !! WORK IN PROGRESS !!
 ***********************************************************************/
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 		if (strcmp(argv[1], "-d") == 0) {
 			startFC(1);
 		}
-		else if (strcmp(argv[1], "-l") == 0) {
+		else if (strcmp(argv[1], "-t") == 0) {
 			startFC(2);
 		}
 		else {

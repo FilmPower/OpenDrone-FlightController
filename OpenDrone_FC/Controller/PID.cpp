@@ -7,6 +7,13 @@
  * 	@version 0.0.2 27.06.2019
  */
 #include "PID.h"
+#include <chrono>
+#include <ctime>  
+
+//TODO: Remove unnecessary code/variables/methods (ArmMotor, ...)
+
+float pid_p_gain_heightHold = 2.5;
+float pid_d_gain_heightHold = 3.3;
 
 PID *PID::instance = 0;
 
@@ -28,7 +35,6 @@ PID::~PID()
 
 	@params Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u
 */
-
 PID *PID::getInstance(Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u)
 {
 	if (instance == 0)
@@ -47,6 +53,8 @@ PID *PID::getInstanceCreated()
 	return instance;
 }
 
+bool log = false;
+
 /**
 	This method meshes the values from the different PIDs and sets the speed of the motors
 	@return void
@@ -60,13 +68,28 @@ void PID::calcValues()
 	while (run) {
 		calcPid();
 
-		if (throttle + pid_output_height < 1800 && throttle + pid_output_height > 1200) {
-			throttle = throttle + pid_output_height;
+		int curThrottle = 0;
+		if (startUp)
+		{
+			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
+				throttle = throttle + pid_output_height;
+				curThrottle = throttle;
+			}
 		}
-		esc_1 = throttle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
-		esc_2 = throttle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
-		esc_3 = throttle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
-		esc_4 = throttle - pid_output_pitch - pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 4 (front-left - CW)
+		else if (heightControl) 
+		{
+			if (throttle + pid_output_height < 1525 && throttle + pid_output_height > 1200) {
+				curThrottle = throttle + pid_output_height;
+			}
+		}
+
+		std::cout << throttle << " " << curThrottle << "\n";
+
+		//TODO: Fix this --> throttle given by the user is currently ignored!! Change before next start!
+		esc_1 = curThrottle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
+		esc_2 = curThrottle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
+		esc_3 = curThrottle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
+		esc_4 = curThrottle - pid_output_pitch - pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 4 (front-left - CW)
 
 		int speedMin = 1100;
 		if (esc_1 < speedMin) esc_1 = speedMin;           //Keep the motors running.
@@ -84,7 +107,10 @@ void PID::calcValues()
 		pwm->SetSpeed(2, esc_2);	//Rear left
 		pwm->SetSpeed(3, esc_3);	//Rear right
 		pwm->SetSpeed(0, esc_4);	//Front right
+		//std::cout << "FR: " << esc_4 << " FL: " << esc_1 << " RL: " << esc_2 << " RR: " << esc_3 << std::endl;
+
 		delay(5);
+		log = true;
 	}
 
 	delay(100);
@@ -100,13 +126,14 @@ void PID::calcValues()
 	@return void
 */
 void PID::calcPid() {
-	double *ar = orientation->getPitchRoll();
+	curPitchRollYaw = orientation->getPitchRoll();
 
-	//std::cout << ar[0] << " " << ar[1] << " " << ar[2] << "\n";
+	//std::cout << ar[0] << " " << ar[1] << " " << ar[2] << " " << std::endl;
 
 	//Roll calculations
-	pid_error_temp = ar[1] - pid_roll_setpoint;
-	if (pid_error_temp != pid_error_temp) {
+	pid_error_temp = curPitchRollYaw[1] - pid_roll_setpoint;
+	if (pid_error_temp != pid_error_temp) 
+	{
 		calcPid();
 	}
 	pid_i_mem_roll += pid_i_gain_roll * pid_error_temp;
@@ -120,8 +147,9 @@ void PID::calcPid() {
 	pid_last_roll_d_error = pid_error_temp;
 
 	//Pitch calculations
-	pid_cur_val = pid_error_temp = ar[0] - pid_pitch_setpoint;
-	if (pid_error_temp != pid_error_temp) {
+	pid_cur_val = pid_error_temp = curPitchRollYaw[0] - pid_pitch_setpoint;
+	if (pid_error_temp != pid_error_temp) 
+	{
 		calcPid();
 	}
 	pid_i_mem_pitch += pid_i_gain_pitch * pid_error_temp;
@@ -135,8 +163,9 @@ void PID::calcPid() {
 	pid_last_pitch_d_error = pid_error_temp;
 
 	//Yaw calculations
-	pid_error_temp = ar[2] - pid_yaw_setpoint;
-	if (pid_error_temp != pid_error_temp) {
+	pid_error_temp = curPitchRollYaw[2] - pid_yaw_setpoint;
+	if (pid_error_temp != pid_error_temp) 
+	{
 		calcPid();
 	}
 	pid_i_mem_yaw += pid_i_gain_yaw * pid_error_temp;
@@ -148,19 +177,73 @@ void PID::calcPid() {
 	else if (pid_output_yaw < pid_max_yaw * -1)pid_output_yaw = pid_max_yaw * -1;
 
 	pid_last_yaw_d_error = pid_error_temp;
+	
+	//Throttle calculations - Altitude Hold & Autostart
+	if (hasHeightControl)
+	{
+		int curDistance = ultrasonic->getDistance();
+		std::cout << curDistance << std::endl;
+		std::cout.flush();
 
-	//Throttle calculations
-	if (heightControl) {
-		double curDistance = ultrasonic->getDistance();
-		pid_error_temp = wantedDistane - curDistance;
+		if (startUp)
+		{
+			pid_error_temp = wantedDistanceStart - curDistance;
 
-		pid_output_height = pid_p_gain_height * pid_error_temp + pid_d_gain_height * ((pid_error_temp - pid_last_height_error));
-		pid_last_height_error = pid_error_temp;
+			bool firstTimeElse = false;
+			if (isStarting) {
+				pid_output_height = pid_p_gain_start * pid_error_temp + pid_d_gain_start * ((pid_error_temp - pid_last_start_error));
+				pid_last_start_error = pid_error_temp;
+
+				if (curDistance > 50)
+				{
+					std::cout << "Drone reached 30cm! Switching PID ..." << std::endl;
+					std::cout.flush();
+					isStarting = false;
+					pid_last_height_error = 0.0;
+					firstTimeElse = true;
+				}
+			}
+			else
+			{
+				throttle = 1525;
+				pid_output_height = 0.0;
+
+				if (firstTimeElse) {
+					//This is done to prevent the drone from crashing after reaching the 30cm
+					std::cout << "Drone IsStarting-Else called the first time! Trying to reach the wanted Start-Height ..." << std::endl;
+					std::cout.flush();
+					firstTimeElse = false;
+				}
+
+				if (curDistance > wantedDistanceStart)
+				{
+					std::cout << "Drone reached the wanted Start-Height! Switching to default Heightcontrol ..." << std::endl;
+					std::cout.flush();
+					startUp = false;
+					heightControl = true;
+					throttle = 1400;
+					wantedPressure = barometer->getBarometerValues()[1];
+				}
+			}
+		}
+		else if (heightControl)
+		{
+			//Stable the drone at the given wantedPressure (for testing this value is fixed at 1.50m)
+			double curPressure = barometer->getBarometerValues()[1];
+			pid_error_temp = (curPressure - wantedPressure);
+
+			pid_output_height = pid_p_gain_heightHold * pid_error_temp + pid_d_gain_heightHold * ((pid_error_temp - pid_last_heightHold_error));
+			pid_last_heightHold_error = pid_error_temp;
+		}
+		else
+		{
+			pid_output_height = 0.0;
+		}
 	}
-	else {
+	else
+	{
 		pid_output_height = 0.0;
 	}
-
 }
 
 /**
@@ -220,8 +303,32 @@ void PID::setRun(bool curRun) {
 */
 void PID::setThrottle(float curThrottle) {
 	if (curThrottle > 1100 && curThrottle < 1700) {
+		if (curThrottle < 1400 || curThrottle > 1500) {
+			//If the user changes the throttle, the heightControl should be turned off
+			if (hasHeightControl) {
+				std::cout << "HeightControl is turned off! Manual control necessary ... " << std::endl;
+				std::cout.flush();
+			}
+			hasHeightControl = false;
+		}
 		throttle = curThrottle;
 	}
+}
+
+/*
+	This method is used to init the landing of the drone
+	@return void
+
+	@params void
+*/
+void PID::landDrone() {
+	std::cout << "Drone too high! AutoStart and HeightControl if off! Landing drone ..." << std::endl;
+	std::cout.flush();
+
+	//TODO: Land the drone by changing the wanted distance
+	throttle = 1200;
+	hasHeightControl = false;
+	pid_output_height = 0.0;
 }
 
 /**
@@ -297,6 +404,18 @@ void PID::setYawSetpoint(int curYawSetpoint) {
 void PID::armMotor() {
 	pwm->ExitMotor();
 	pwm->ArmMotor();
+
+	double val = 0.0;
+	int vals = 20;
+	for (int i = 0; i < vals; i++) {
+		val += barometer->getBarometerValues()[1];
+		delay(25);
+	}
+
+	double baroSubMax = 0.47;	//The drone should not get higher than 3m --> 0.47
+
+	maxBaroVal = (val / vals) - baroSubMax;
+	std::cout << "Armed ..." << std::endl;
 }
 
 /**
@@ -335,11 +454,44 @@ float *PID::getPIDVals() {
 }
 
 /**
+	This method returns the important values for the altitudeHold (used for logging into a logfile)
+	@return void
+*/
+double* PID::getAltVals() {
+	if (log) {
+		static double ar[17];
+		ar[0] = barometer->getBarometerValues()[1];
+		ar[1] = ultrasonic->getDistance();
+		ar[2] = esc_1;
+		ar[3] = esc_2;
+		ar[4] = esc_3;
+		ar[5] = esc_4;
+		ar[6] = throttle;
+		ar[7] = curPitchRollYaw[0];
+		ar[8] = curPitchRollYaw[1];
+		ar[9] = curPitchRollYaw[2];
+		ar[10] = pid_output_height;
+		ar[11] = pid_output_pitch;
+		ar[12] = pid_output_roll;
+		ar[13] = pid_output_yaw;
+		ar[14] = curPitchRollYaw[0] - pid_pitch_setpoint;
+		ar[15] = curPitchRollYaw[1] - pid_roll_setpoint;
+		ar[16] = curPitchRollYaw[2] - pid_yaw_setpoint;
+		return ar;
+	}
+	else {
+		return NULL;
+	}
+}
+
+/**
 	This method is used to enable/disable the height control of the drone
 	@return void
 */
 void PID::updateHeightControl() {
-	heightControl = !heightControl;
+	hasHeightControl = !hasHeightControl;
+	std::cout << "HeightControl-Enabled: " << hasHeightControl << std::endl;
+	std::cout.flush();
 }
 
 /**

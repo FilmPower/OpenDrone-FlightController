@@ -7,11 +7,8 @@
  * 	@version 0.0.2 26.06.2019
  */
 #include "FlightController.h"
-#include "Sensor/AbstractSensor/Barometer.h"
-#include "Sensor/AbstractSensor/Ultrasonic.h"
 #include "Sensor/BMP280.h"
-#include "Sensor/BNO080.h"
-#include "Sensor/HCSR04.h"
+#include "Sensor/GYUS42.h"
 
 #include "Network/TCPServer.h"
 #include "Motor/PWMMotorTest.h"
@@ -150,7 +147,7 @@ void FlightController::initObjects()
 	orientation = new Orientation();
 	barometer = new BMP280();
 	pwm = new PWMMotorTest();
-	ultrasonic = new HCSR04(5,6,0);
+	ultrasonic = new GYUS42();
 	sql = new SQLite();
 	pid = PID::getInstance(orientation, pwm, barometer, ultrasonic);
 }
@@ -164,42 +161,88 @@ void FlightController::initObjects()
 */
 int FlightController::run()
 {
-	//Start server
-	server = TCPServer::getInstance();
-	thread serverThread(runServer, server);
-	while (!server->connected) { delay(50); };
-	cout << "Client connected!\n";
+	if (arg == 0) 
+	{
+		//Start server
+		server = TCPServer::getInstance();
+		thread serverThread(runServer, server);
+		while (!server->connected) { delay(50); };
+		cout << "Client connected!\n";
 
-	//Initialize all important objects
-	initObjects();
+		//Initialize all important objects
+		initObjects();
 
-	//Check if user pressed Ctrl+C to interrupt the pid and stop the motors
-	signal(SIGINT, &sighandler);
+		//Check if user pressed Ctrl+C to interrupt the pid and stop the motors
+		signal(SIGINT, &sighandler);
 
-	delay(250);
+		delay(250);
 
-	//Run Threads
-	thread pitchRollYawThread(runOrientation, orientation);
-	thread barometerThread(runBarometer, barometer);
-	thread pidController(runPid, pid);
-	thread sqlThread(runSQL, sql, orientation, ultrasonic);
-	thread ultrasonicThread(runUltrasonic, ultrasonic);
-	cout << "Threads are running!\n";
+		//Run Threads
+		thread pitchRollYawThread(runOrientation, orientation);
+		thread barometerThread(runBarometer, barometer);
+		thread pidController(runPid, pid);
+		thread sqlThread(runSQL, sql, orientation, ultrasonic);
+		thread ultrasonicThread(runUltrasonic, ultrasonic);
+		cout << "Threads are running!\n";
 
-	//TODO: Interrupt the Threads
-	/*orientation->interruptOrientation();
-	barometer->interruptBaromter();
-	pid->interruptPid();
-	sql->interruptSQL();
-	cout << "Interrupting Threads! \n";*/
+		//Interrupt the Threads
+		/*orientation->interruptOrientation();
+		barometer->interruptBaromter();
+		pid->interruptPid();
+		sql->interruptSQL();
+		cout << "Interrupting Threads! \n";*/
 
-	//Wait until threads stopped
-	serverThread.join();
-	pitchRollYawThread.join();
-	barometerThread.join();
-	pidController.join();
-	sqlThread.join();
-	cout << "Stopped Threads!\n";
+		//Wait until threads stopped
+		serverThread.join();
+		pitchRollYawThread.join();
+		barometerThread.join();
+		pidController.join();
+		sqlThread.join();
+		cout << "Stopped Threads!\n";
+	}
+	else if (arg == 1) 
+	{
+		//Test the connected Sensors
+	
+		//WiringPi GPIO-Setup
+		int rc = wiringPiSetupGpio();
+		if (rc != 0)
+		{
+			//The GPIO-Setup did not work
+			cout << "Error initializing the GPIO-Setup!\n";
+			return 1;
+		}
+
+		//Init the important objects
+		orientation = new Orientation();
+		barometer = new BMP280();
+		ultrasonic = new GYUS42();
+		
+		thread pitchRollYawThread(runOrientation, orientation);
+		thread barometerThread(runBarometer, barometer);
+		thread ultrasonicThread(runUltrasonic, ultrasonic);
+
+		cout << "Testing Sensors ..." << endl;
+		delay(2000);
+
+		for (int i = 0; i < 100; i++) 
+		{
+			double *ori = orientation->getPitchRoll();
+			double *baro = barometer->getBarometerValues();
+			double ultra = ultrasonic->getDistance();
+			cout << "Orientation: " << ori[0] << " " << ori[1] << " " << ori[2];
+			cout << " Barometer: " << baro[0] << " " << baro[1];
+			cout << " Distance: " << ultra << endl;
+			cout.flush();
+			delay(5);
+		}
+		orientation->interruptOrientation();
+		barometer->interruptBaromter();
+
+		pitchRollYawThread.join();
+		barometerThread.join();
+	}
+
 
 	return (0);
 }
