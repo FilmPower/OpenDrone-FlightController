@@ -8,7 +8,6 @@
  */
 #include "FlightController.h"
 #include "Sensor/BMP280.h"
-#include "Sensor/BNO080.h"
 #include "Sensor/GYUS42.h"
 
 #include "Network/TCPServer.h"
