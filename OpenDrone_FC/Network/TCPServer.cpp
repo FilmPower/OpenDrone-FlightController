@@ -24,6 +24,7 @@
 #include "../Controller/PID.h"
 #include <list>
 #include "Command.h"
+#include <wiringPi.h>
 
 #define TRUE   1  
 #define FALSE  0  

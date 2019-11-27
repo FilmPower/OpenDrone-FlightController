@@ -7,6 +7,8 @@
  * 	@version 0.0.2 27.06.2019
  */
 #include "Orientation.h"
+
+#include "../Sensor/BNO080.h"
 #include <iostream>
 #include <wiringPi.h>
 #include <math.h>

@@ -13,6 +13,7 @@
 #include "../Controller/Orientation.h"
 #include "../Sensor/AbstractSensor/Ultrasonic.h"
 #include "../Controller/PID.h"
+#include "../Network/TCPServer.h"
 #include "wiringPi.h"
 #include <string.h>
 #include <iostream>

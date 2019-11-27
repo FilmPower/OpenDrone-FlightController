@@ -8,7 +8,9 @@
  */
 #pragma once
 #include "AbstractSensor/Barometer.h"
-#include "../Filter/Filter.h"
+
+class Filter;
+
 class BMP280 :
 	public virtual Barometer
 {

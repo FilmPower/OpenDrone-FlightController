@@ -6,8 +6,9 @@
  * 	@author Tim Klecka
  * 	@version 0.0.1 07.01.2019
  */
-#include <list> 
 #pragma once
+#include <list> 
+
 class Filter
 {
 public:

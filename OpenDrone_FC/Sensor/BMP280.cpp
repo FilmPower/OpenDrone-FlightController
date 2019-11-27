@@ -7,7 +7,10 @@
  * 	@version 0.0.1 07.01.2019
  */
 #include "BMP280.h"
+
 #include "../Controller/Exit.h"
+#include "../Filter/Filter.h"
+
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <iostream>

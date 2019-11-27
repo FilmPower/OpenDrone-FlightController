@@ -1,4 +1,6 @@
 #include "Exit.h"
+
+#include "../Network/TCPServer.h"
 #include <string.h>
 #include <sstream>
 

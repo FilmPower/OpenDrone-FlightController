@@ -6,9 +6,9 @@
  * 	@author Thomas Brych, Tim Klecka
  * 	@version 0.0.2 27.06.2019
  */
-#include "Orientation.h"
-
 #pragma once
+class Orientation;
+
 class Calibration
 {
 public:

@@ -6,12 +6,19 @@
  * 	@author Markus Kurzmann, Thomas Brych
  * 	@version 0.0.2 26.06.2019
  */
+#include "Modbus.h"
+
+#include "../Motor/PWMMotorTest.h"
+#include "../Controller/PID.h"
+#include "../Controller/Calibration.h"
+#include "Command.h"
+#include "TCPServer.h"
+
+#include <vector>
 #include <list> 
 #include <iterator>
-#include "Modbus.h";
-#include "thread"
-#include "TCPServer.h"
-#include "Command.h"
+#include <wiringPi.h>
+#include <sstream>
 using namespace std;
 
 Modbus::Modbus()
