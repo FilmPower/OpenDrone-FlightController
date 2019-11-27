@@ -7,7 +7,10 @@
  * 	@version 0.0.1 07.01.2019
  */
 #include "BMP280.h"
+
 #include "../Controller/Exit.h"
+#include "../Filter/Filter.h"
+
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <iostream>
@@ -59,7 +62,7 @@ BMP280::BMP280()
 	wiringPiI2CWriteReg8(fd, BMP280_CONFIG, 0x00);
 	wiringPiI2CWriteReg8(fd, BMP280_CONTROL, 0x3F);
 
-	int id = wiringPiI2CReadReg8(fd, 0xD0);
+	wiringPiI2CReadReg8(fd, 0xD0);
 	/*if (id != 88) {
 		Exit *exit = Exit::getInstance();
 		exit->sendError(0x101, true);

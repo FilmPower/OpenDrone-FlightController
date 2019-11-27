@@ -184,7 +184,7 @@ void BNO080::parseEvent(void) {
 
 void BNO080::reportFeatureResponse(void) {
 	unsigned int reportInterval = (spiRead.buffer[8] << 24) + (spiRead.buffer[7] << 16) + (spiRead.buffer[6] << 8) + spiRead.buffer[5];
-	unsigned int batchInterval = (spiRead.buffer[12] << 24) + (spiRead.buffer[11] << 16) + (spiRead.buffer[10] << 8) + spiRead.buffer[9];
+	//unsigned int batchInterval = (spiRead.buffer[12] << 24) + (spiRead.buffer[11] << 16) + (spiRead.buffer[10] << 8) + spiRead.buffer[9];
 	switch (spiRead.buffer[1]) {
 	case SENSOR_REPORTID_GAME_ROTATION_VECTOR:
 		gameRotationVectorData.reportInterval = reportInterval;
@@ -508,7 +508,6 @@ void BNO080::saveCalibration(void) {
 	sendPacket(CHANNEL_CONTROL, 12);
 
 	int timeout = 0;
-	int counter = 0;
 	while (timeout < 1000) {
 		timeout += 1;
 		delayMicroseconds(50);

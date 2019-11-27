@@ -7,12 +7,11 @@
  * 	@version 0.0.2 27.06.2019
  */
 #include "Orientation.h"
-#include "../Motor/PWMMotorTest.h"
-#include "../Sensor/AbstractSensor/Barometer.h"
-#include "../Sensor/AbstractSensor/Ultrasonic.h"
-#include "wiringPi.h"
 #include "iostream"
-#include "thread"
+
+class PWMMotorTest;
+class Barometer;
+class Ultrasonic;
 
 #pragma once
 class PID
