@@ -71,10 +71,10 @@ double *Orientation::getPitchRollReal()
 	}
 	else
 	{
-		ar[0] = NULL;
-		ar[1] = NULL;
-		ar[2] = NULL;
-		ar[3] = NULL;
+		ar[0] = 0.0;
+		ar[1] = 0.0;
+		ar[2] = 0.0;
+		ar[3] = 0.0;
 	}
 
 	return ar;
@@ -97,10 +97,10 @@ double *Orientation::getPitchRoll()
 	}
 	else
 	{
-		ar[0] = NULL;
-		ar[1] = NULL;
-		ar[2] = NULL;
-		ar[3] = NULL;
+		ar[0] = 0.0;
+		ar[1] = 0.0;
+		ar[2] = 0.0;
+		ar[3] = 0.0;
 	}
 
 	return ar;

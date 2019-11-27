@@ -62,7 +62,7 @@ BMP280::BMP280()
 	wiringPiI2CWriteReg8(fd, BMP280_CONFIG, 0x00);
 	wiringPiI2CWriteReg8(fd, BMP280_CONTROL, 0x3F);
 
-	int id = wiringPiI2CReadReg8(fd, 0xD0);
+	wiringPiI2CReadReg8(fd, 0xD0);
 	/*if (id != 88) {
 		Exit *exit = Exit::getInstance();
 		exit->sendError(0x101, true);

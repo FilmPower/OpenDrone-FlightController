@@ -62,7 +62,7 @@ void SQLite::startSQL(Orientation *o, Ultrasonic *ultrasonic) {
 	const char* data = "Callback function called";*/
 
 	PID *pid = PID::getInstanceCreated();
-	TCPServer *tcp = TCPServer::getInstance();
+	//TCPServer *tcp = TCPServer::getInstance();
 	ofstream altLoggingFile;
 	altLoggingFile.open("Logger.csv");
 	altLoggingFile << "Time;CurBaroVal;UltrasonicDistance;ESC1;ESC2;ESC3;ESC4;Throttle;Pitch;Roll;Yaw;OuputHeightPID;OutputPitchPID;OutputRollPID;OutputYawPID;ErrorPitch;ErrorRoll;ErrorYaw" << std::endl;

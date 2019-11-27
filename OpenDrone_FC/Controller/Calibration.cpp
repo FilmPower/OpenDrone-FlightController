@@ -45,7 +45,7 @@ void Calibration::calibrate() {
 	roll = roll / length;
 	yaw = yaw / length;
 
-	double ar[2];
+	double ar[3];
 	ar[0] = pitch;
 	ar[1] = roll;
 	ar[2] = yaw;

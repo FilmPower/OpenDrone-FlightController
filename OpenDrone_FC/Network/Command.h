@@ -7,9 +7,9 @@
  * 	@version 0.0.2 26.06.2019
  */
 #pragma once
-#include "iostream";
-#include <string>;
-#include <iostream>;
+#include "iostream"
+#include <string>
+#include <iostream>
 
 class Command
 {
