@@ -96,7 +96,7 @@ private:
 
 	float pid_cur_val = 0;
 
-	float maxAngle = 45;
+	float maxAngle = 20;
 	float factorControl = maxAngle / 480;			//Maximum 45° (480 steps)
 
 	bool run = false, stop = false;
