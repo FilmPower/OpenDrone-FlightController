@@ -15,6 +15,7 @@ class Exit;
 class PID;
 class PWMMotorTest;
 class SQLite;
+class AutoFlight;
 
 class FlightController
 {
@@ -33,6 +34,7 @@ private:
 	PID *pid;
 	PWMMotorTest *pwm;
 	SQLite *sql;
+	AutoFlight *autoFlight;
 
 	void initObjects();
 };

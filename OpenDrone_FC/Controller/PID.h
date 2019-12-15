@@ -12,6 +12,7 @@
 class PWMMotorTest;
 class Barometer;
 class Ultrasonic;
+class AutoFlight;
 
 #pragma once
 class PID
@@ -29,6 +30,7 @@ public:
 	void setPitchSetpoint(int curPitchSetpoint);
 	void setRollSetpoint(int curRollSetpoint);
 	void setYawSetpoint(int curYawSetpoint);
+	void setAutoFlight(AutoFlight* a);
 	void setRun(bool curRun);
 	void landDrone();
 	void armMotor();
@@ -50,6 +52,7 @@ private:
 	Orientation *orientation = NULL;
 	Barometer *barometer = NULL;
 	Ultrasonic *ultrasonic = NULL;
+	AutoFlight *autoFlight = NULL;
 
 	float pid_error_temp;
 	float pid_i_mem_roll = 0, pid_roll_setpoint = 0, pid_output_roll, pid_last_roll_d_error = 0;

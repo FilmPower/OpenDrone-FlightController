@@ -61,8 +61,10 @@
       <LibraryDependencies>wiringPi;pthread;tinyxml2;bcm2835;sqlite3</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command></Command>
-      <Message></Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -70,11 +72,14 @@
       <LibraryDependencies>wiringPi;pthread;tinyxml2;bcm2835;sqlite3</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command></Command>
-      <Message></Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controller\AutoFlight.cpp" />
     <ClCompile Include="Controller\Calibration.cpp" />
     <ClCompile Include="Controller\Exit.cpp" />
     <ClCompile Include="Controller\Orientation.cpp" />
@@ -93,6 +98,7 @@
     <ClCompile Include="Sensor\GYUS42.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controller\AutoFlight.h" />
     <ClInclude Include="Controller\Calibration.h" />
     <ClInclude Include="Controller\Exit.h" />
     <ClInclude Include="Controller\Orientation.h" />

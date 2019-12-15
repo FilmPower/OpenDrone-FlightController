@@ -11,6 +11,7 @@
 #include "../Motor/PWMMotorTest.h"
 #include "../Sensor/AbstractSensor/Barometer.h"
 #include "../Sensor/AbstractSensor/Ultrasonic.h"
+#include "AutoFlight.h"
 #include <chrono>
 #include <ctime> 
 #include "wiringPi.h"
@@ -251,6 +252,10 @@ void PID::calcPid() {
 	{
 		pid_output_height = 0.0;
 	}
+}
+
+void PID::setAutoFlight(AutoFlight* a) {
+	autoFlight = a;
 }
 
 /**

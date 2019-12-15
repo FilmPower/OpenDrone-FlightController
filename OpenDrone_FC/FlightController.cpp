@@ -10,13 +10,14 @@
 #include "Sensor/BMP280.h"
 #include "Sensor/GYUS42.h"
 
-#include "Network/TCPServer.h"
+#include "Network/TCPServer.h" 
 #include "Motor/PWMMotorTest.h"
 #include "Database/SQLite.h"
 
 #include "Controller/Calibration.h"
 #include "Controller/Orientation.h"
 #include "Controller/Exit.h"
+#include "Controller/AutoFlight.h"
 #include "Controller/PID.h"
 
 #include <wiringPi.h>
@@ -90,6 +91,16 @@ static void runPid(PID *pid) {
 }
 
 /**
+	Method to run the AutoFlight-Thread
+	@return void
+
+	@params AutoFlight *autoFlight
+*/
+static void runAutoFlight(AutoFlight* autoFlight) {
+	autoFlight->start();
+}
+
+/**
 	Method to run the SQL-Thread
 	@return void
 
@@ -150,6 +161,9 @@ void FlightController::initObjects()
 	ultrasonic = new GYUS42();
 	sql = new SQLite();
 	pid = PID::getInstance(orientation, pwm, barometer, ultrasonic);
+	//TODO: Change the ultrasonic object to the real (second) sensor
+	autoFlight = new AutoFlight(pid, ultrasonic);
+
 }
 
 /**
@@ -180,6 +194,7 @@ int FlightController::run()
 		//Run Threads
 		thread pitchRollYawThread(runOrientation, orientation);
 		thread barometerThread(runBarometer, barometer);
+		thread autoFlightThread(runAutoFlight, autoFlight);
 		thread pidController(runPid, pid);
 		thread sqlThread(runSQL, sql, orientation, ultrasonic);
 		thread ultrasonicThread(runUltrasonic, ultrasonic);
@@ -196,6 +211,7 @@ int FlightController::run()
 		serverThread.join();
 		pitchRollYawThread.join();
 		barometerThread.join();
+		autoFlightThread.join();
 		pidController.join();
 		sqlThread.join();
 		cout << "Stopped Threads!\n";
@@ -242,7 +258,6 @@ int FlightController::run()
 		pitchRollYawThread.join();
 		barometerThread.join();
 	}
-
 
 	return (0);
 }
