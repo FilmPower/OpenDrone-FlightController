@@ -16,11 +16,10 @@ static void runObjectDetection(PID* pid, Ultrasonic *ultrasonic) {
 			pid->setPitchSetpoint(1500);
 
 			//TODO: Find another way
-		}
+		} 
 		delay(20);
 	}
 }
-
 
 int status = 0;
 
@@ -70,8 +69,6 @@ void AutoFlight::testAutoFlight() {
 	}
 
 	//Stop
-	pid->setPitchSetpoint(1550);
-	delay(25);
 	pid->setPitchSetpoint(1500);
 }
 
