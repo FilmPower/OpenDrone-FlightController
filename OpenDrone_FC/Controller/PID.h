@@ -68,9 +68,9 @@ private:
 	bool heightControl = false;	//If heightControl should be used
 	bool hasHeightControl = false;
 	int wantedDistanceStart = 120;	//The wanted distance when auto-starting the drone
+	int wantedDistance = 120;
 	double maxBaroVal = 0.0;
 	bool emergencyThrottleSet = false;
-	int wantedDistance = 120;
 	double wantedPressure = 0;
 
 	float pid_p_gain_roll = 2.0; //1.25             //Gain setting for the roll P-controller 0.65
@@ -97,7 +97,7 @@ private:
 
 	float pid_cur_val = 0;
 
-	float maxAngle = 45;
+	float maxAngle = 20;
 	float factorControl = maxAngle / 480;			//Maximum 45° (480 steps)
 
 	bool run = false, stop = false;

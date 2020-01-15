@@ -10,10 +10,9 @@
 #include <chrono>
 #include <ctime>  
 
-//TODO: Remove unnecessary code/variables/methods (ArmMotor, ...)
-
-float pid_p_gain_heightHold = 2.5;
-float pid_d_gain_heightHold = 3.3;
+float pid_p_gain_heightHold = 8.5;
+float pid_d_gain_heightHold = 9.5;
+int startThrottleAltitude = 1400;
 
 PID *PID::instance = 0;
 
@@ -73,19 +72,38 @@ void PID::calcValues()
 		{
 			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
 				throttle = throttle + pid_output_height;
-				curThrottle = throttle;
 			}
+			else {
+				if (throttle + pid_output_height >= 1750) {
+					throttle = 1750;
+				}
+				if (throttle + pid_output_height <= 1200) {
+					throttle = 1200;
+				}
+			}
+			curThrottle = throttle;
 		}
 		else if (heightControl) 
 		{
-			if (throttle + pid_output_height < 1525 && throttle + pid_output_height > 1200) {
+			if (throttle + pid_output_height < 1550 && throttle + pid_output_height > 1200) {
 				curThrottle = throttle + pid_output_height;
 			}
+			else {
+				if (throttle + pid_output_height >= 1550) {
+					curThrottle = 1550;
+				}
+				if (throttle + pid_output_height <= 1200) {
+					curThrottle = 1200;
+				}
+			}
+		}
+		else {
+			curThrottle = throttle;
 		}
 
-		std::cout << throttle << " " << curThrottle << "\n";
+		std::cout << "Thr: " << throttle << "CurTrh: " << curThrottle << std::endl;
+		std::cout.flush();
 
-		//TODO: Fix this --> throttle given by the user is currently ignored!! Change before next start!
 		esc_1 = curThrottle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
 		esc_2 = curThrottle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
 		esc_3 = curThrottle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
@@ -221,19 +239,21 @@ void PID::calcPid() {
 					std::cout.flush();
 					startUp = false;
 					heightControl = true;
-					throttle = 1400;
+					throttle = startThrottleAltitude;
 					wantedPressure = barometer->getBarometerValues()[1];
 				}
 			}
 		}
 		else if (heightControl)
 		{
-			//Stable the drone at the given wantedPressure (for testing this value is fixed at 1.50m)
+			//Stable the drone at the given wantedPressure (for testing this value is fixed at 1.20m)
 			double curPressure = barometer->getBarometerValues()[1];
 			pid_error_temp = (curPressure - wantedPressure);
 
 			pid_output_height = pid_p_gain_heightHold * pid_error_temp + pid_d_gain_heightHold * ((pid_error_temp - pid_last_heightHold_error));
 			pid_last_heightHold_error = pid_error_temp;
+
+			std::cout << "Wanted: " << wantedPressure << "Cur: " << curPressure << "Err: " << pid_error_temp << "OutH: " << pid_output_height << std::endl;
 		}
 		else
 		{
