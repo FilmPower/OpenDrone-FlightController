@@ -12,7 +12,7 @@
 
 float pid_p_gain_heightHold = 8.5;
 float pid_d_gain_heightHold = 9.5;
-int startThrottleAltitude = 1400;
+int startThrottleAltitude = 1500;
 
 PID *PID::instance = 0;
 
@@ -85,12 +85,12 @@ void PID::calcValues()
 		}
 		else if (heightControl) 
 		{
-			if (throttle + pid_output_height < 1550 && throttle + pid_output_height > 1200) {
+			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
 				curThrottle = throttle + pid_output_height;
 			}
 			else {
-				if (throttle + pid_output_height >= 1550) {
-					curThrottle = 1550;
+				if (throttle + pid_output_height >= 1750) {
+					curThrottle = 1750;
 				}
 				if (throttle + pid_output_height <= 1200) {
 					curThrottle = 1200;
