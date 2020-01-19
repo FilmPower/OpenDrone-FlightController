@@ -7,7 +7,9 @@
 using namespace std::chrono;
 using namespace std;
 
-static void runObjectDetection(PID* pid, Ultrasonic *ultrasonic) {
+
+//Obeject-Detection --> TODO: needs to be finished
+static void runObjectDetection(PID* pid, Ultrasonic* ultrasonic) {
 	while (1) {
 		int distance = ultrasonic->getDistance();
 		if (distance < 250) {
@@ -16,10 +18,11 @@ static void runObjectDetection(PID* pid, Ultrasonic *ultrasonic) {
 			pid->setPitchSetpoint(1500);
 
 			//TODO: Find another way
-		} 
+		}
 		delay(20);
 	}
 }
+
 
 int status = 0;
 
@@ -47,13 +50,30 @@ void AutoFlight::doAutoFlight() {
 		{
 			//0: Do nothing
 			case 0: return;
-			//1: Test AutoFlight
-			case 1: testAutoFlight(); return;
 			//TODO: Other cases
 		}
 		delay(5);
 	}
 }
+
+void AutoFlight::setPitchDegree(float degree) {
+	pid->setPitchSetpoint_Degree(degree);
+}
+
+void AutoFlight::setRollDegree(float degree) {
+	pid->setRollSetpoint_Degree(degree);
+}
+
+void AutoFlight::setYawDegree(float degree) {
+	pid->setYawSetpoint_Degree(degree);
+}
+
+AutoFlight::~AutoFlight() {
+	
+}
+
+
+/*
 
 void AutoFlight::testAutoFlight() {
 	//Fly forward for 3 seconds, stop after that
@@ -72,10 +92,4 @@ void AutoFlight::testAutoFlight() {
 	pid->setPitchSetpoint(1500);
 }
 
-void AutoFlight::startObjectDetection() {
-
-}
-
-AutoFlight::~AutoFlight() {
-	
-}
+*/

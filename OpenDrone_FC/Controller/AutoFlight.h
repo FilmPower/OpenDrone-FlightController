@@ -17,5 +17,9 @@ private:
 	void doAutoFlight();
 	void testAutoFlight();
 	void startObjectDetection();
+
+	void setPitchDegree(float degree);
+	void setRollDegree(float degree);
+	void setYawDegree(float degree);
 };
 

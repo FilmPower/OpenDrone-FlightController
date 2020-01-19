@@ -46,6 +46,10 @@ public:
 
 	void calcValues();
 
+	void setPitchSetpoint_Degree(float degree);
+	void setRollSetpoint_Degree(float degree);
+	void setYawSetpoint_Degree(float degree);
+
 private:
 	PID(Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u);
 	PWMMotorTest *pwm = NULL;
@@ -105,4 +109,6 @@ private:
 	bool run = false, stop = false;
 
 	void calcPid();
+
+
 };

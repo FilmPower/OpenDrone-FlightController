@@ -18,6 +18,7 @@
     <ClCompile Include="Network\Command.cpp" />
     <ClCompile Include="Sensor\GYUS42.cpp" />
     <ClCompile Include="Controller\AutoFlight.cpp" />
+    <ClCompile Include="Controller\WayPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\Calibration.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Network\Command.h" />
     <ClInclude Include="Sensor\GYUS42.h" />
     <ClInclude Include="Controller\AutoFlight.h" />
+    <ClInclude Include="Controller\WayPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="CONFIG.xml" />

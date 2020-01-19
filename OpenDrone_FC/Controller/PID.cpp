@@ -532,3 +532,40 @@ Orientation *PID::getOrientatin() {
 PWMMotorTest *PID::getPwmMotorTest() {
 	return pwm;
 }
+
+void PID::setPitchSetpoint_Degree(float degree) {
+	if (degree >= -maxAngle && degree <= maxAngle) {
+		pid_pitch_setpoint = degree;
+	}
+	else if (degree < -maxAngle) {
+		pid_pitch_setpoint = -maxAngle;
+	}
+	else if (degree > maxAngle) {
+		pid_pitch_setpoint = maxAngle;
+	}
+}
+
+void PID::setRollSetpoint_Degree(float degree) {
+	if (degree >= -maxAngle && degree <= maxAngle) {
+		pid_roll_setpoint = degree;
+	}
+	else if (degree < -maxAngle) {
+		pid_roll_setpoint = -maxAngle;
+	}
+	else if (degree > maxAngle) {
+		pid_roll_setpoint = maxAngle;
+	}
+}
+
+void PID::setYawSetpoint_Degree(float degree) {
+	int yawMaxAngle = 180;
+	if (degree >= -yawMaxAngle && degree <= yawMaxAngle) {
+		pid_yaw_setpoint = degree;
+	}
+	else if (degree < -yawMaxAngle) {
+		pid_yaw_setpoint = -yawMaxAngle;
+	}
+	else if (degree > yawMaxAngle) {
+		pid_yaw_setpoint = yawMaxAngle;
+	}
+}
