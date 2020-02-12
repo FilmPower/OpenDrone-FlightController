@@ -61,8 +61,10 @@
       <LibraryDependencies>wiringPi;pthread;tinyxml2;bcm2835;sqlite3</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command></Command>
-      <Message></Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -70,8 +72,10 @@
       <LibraryDependencies>wiringPi;pthread;tinyxml2;bcm2835;sqlite3</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command></Command>
-      <Message></Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -86,6 +90,7 @@
     <ClCompile Include="Motor\PCA9685.cpp" />
     <ClCompile Include="Motor\PWMMotorTest.cpp" />
     <ClCompile Include="Network\Command.cpp" />
+    <ClCompile Include="Network\MavLink.cpp" />
     <ClCompile Include="Network\Modbus.cpp" />
     <ClCompile Include="Network\TCPServer.cpp" />
     <ClCompile Include="Sensor\BMP280.cpp" />
@@ -99,6 +104,7 @@
     <ClInclude Include="Controller\PID.h" />
     <ClInclude Include="Database\SQLite.h" />
     <ClInclude Include="Network\Command.h" />
+    <ClInclude Include="Network\MavLink.h" />
     <ClInclude Include="Network\Modbus.h" />
     <ClInclude Include="Sensor\BMP280.h" />
     <ClInclude Include="Filter\Filter.h" />
