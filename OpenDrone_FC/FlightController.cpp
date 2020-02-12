@@ -10,7 +10,7 @@
 #include "Sensor/BMP280.h"
 #include "Sensor/GYUS42.h"
 
-#include "Network/TCPServer.h"
+#include "Network/MavLink.h"
 #include "Motor/PWMMotorTest.h"
 #include "Database/SQLite.h"
 
@@ -74,9 +74,9 @@ static void runOrientation(Orientation *orientation)
 
 	@params TCPServer *server
 */
-static void runServer(TCPServer *server)
+static void runServer(MavLink *server)
 {
-	server->startUp();
+	server->start();
 }
 
 /**
@@ -164,9 +164,9 @@ int FlightController::run()
 	if (arg == 0) 
 	{
 		//Start server
-		server = TCPServer::getInstance();
+		server = new MavLink();
 		thread serverThread(runServer, server);
-		while (!server->connected) { delay(50); };
+		//while (!server->connected) { delay(50); };
 		cout << "Client connected!\n";
 
 		//Initialize all important objects
@@ -230,7 +230,7 @@ int FlightController::run()
 			double *ori = orientation->getPitchRoll();
 			double *baro = barometer->getBarometerValues();
 			double ultra = ultrasonic->getDistance();
-			cout << "Orientation: " << ori[0] << " " << ori[1] << " " << ori[2];
+			cout << " Orientation: " << ori[0] << " " << ori[1] << " " << ori[2];
 			cout << " Barometer: " << baro[0] << " " << baro[1];
 			cout << " Distance: " << ultra << endl;
 			cout.flush();

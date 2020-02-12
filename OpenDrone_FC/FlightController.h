@@ -10,7 +10,7 @@
 class Orientation;
 class Barometer;
 class Ultrasonic;
-class TCPServer;
+class MavLink;
 class Exit;
 class PID;
 class PWMMotorTest;
@@ -28,7 +28,7 @@ private:
 	Orientation *orientation;
 	Barometer *barometer;
 	Ultrasonic *ultrasonic;
-	TCPServer *server;
+	MavLink *server;
 	Exit *error;
 	PID *pid;
 	PWMMotorTest *pwm;
