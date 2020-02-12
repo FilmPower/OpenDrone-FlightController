@@ -64,7 +64,7 @@ BMP280::BMP280()
 		Exit *exit = Exit::getInstance();
 		exit->sendError(0x101, true);
 	}*/
-	filter = new Filter(0, 500000, 50);
+	filter = new Filter(0, 500000, 5);
 }
 
 void BMP280::load_calibration(int fd)
