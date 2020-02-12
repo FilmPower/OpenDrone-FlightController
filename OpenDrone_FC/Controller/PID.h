@@ -42,6 +42,10 @@ public:
 	Orientation *getOrientatin();
 	PWMMotorTest *getPwmMotorTest();
 
+	void setPitchSetpoint_Degree(float degree);
+	void setRollSetpoint_Degree(float degree);
+	void setYawSetpoint_Degree(float degree);
+
 	void calcValues();
 
 private:

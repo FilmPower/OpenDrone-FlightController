@@ -184,6 +184,10 @@ void MavLink::start() {
 
                         if (timestamp > lastRecieved) {
                             //TODO: Run setPitch/setRoll/setYaw
+                            pid->setPitchSetpoint_Degree(pitch);
+                            pid->setRollSetpoint_Degree(roll);
+                            pid->setYawSetpoint_Degree(yaw);
+                            lastRecieved = timestamp;
                         }
                         break;
                     }
