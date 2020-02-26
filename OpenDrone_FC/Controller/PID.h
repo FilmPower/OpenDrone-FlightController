@@ -8,6 +8,7 @@
  */
 #include "Orientation.h"
 #include "iostream"
+#include <string.h>
 
 class PWMMotorTest;
 class Barometer;
@@ -40,6 +41,8 @@ public:
 	float *getPIDVals();
 	double* getAltVals();
 	void updateHeightControl();
+	void setWayPoints(std::string points);
+
 
 	Orientation *getOrientatin();
 	PWMMotorTest *getPwmMotorTest();

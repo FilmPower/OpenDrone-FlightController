@@ -9,6 +9,7 @@
 #include "FlightController.h"
 #include "Sensor/BMP280.h"
 #include "Sensor/GYUS42.h"
+#include "Sensor/BN880.h"
 
 #include "Network/TCPServer.h" 
 #include "Motor/PWMMotorTest.h"
@@ -56,6 +57,17 @@ static void runUltrasonic(Ultrasonic *ultrasonic)
 static void runBarometer(Barometer *barometer)
 {
 	barometer->runBarometer();
+}
+
+/**
+	Method to run the GPS-Thread
+	@return void
+
+	@params GPS *gps
+*/
+static void runGPS(GPS *gps)
+{
+	gps->runGPS();
 }
 
 /**
@@ -153,17 +165,18 @@ void FlightController::initObjects()
 		error->sendError(0x01, true);
 		return;
 	}
-  
+	
 	//Init the important objects
 	orientation = new Orientation();
 	barometer = new BMP280();
 	pwm = new PWMMotorTest();
 	ultrasonic = new GYUS42();
+	gps = new BN880();
+
 	sql = new SQLite();
 	pid = PID::getInstance(orientation, pwm, barometer, ultrasonic);
 	//TODO: Change the ultrasonic object to the real (second) sensor
-	autoFlight = new AutoFlight(pid, ultrasonic);
-
+	autoFlight = new AutoFlight(pid, ultrasonic, gps);
 }
 
 /**
@@ -185,6 +198,8 @@ int FlightController::run()
 
 		//Initialize all important objects
 		initObjects();
+		cout << "Object initiated" << endl;
+		cout.flush();
 
 		//Check if user pressed Ctrl+C to interrupt the pid and stop the motors
 		signal(SIGINT, &sighandler);
@@ -194,6 +209,7 @@ int FlightController::run()
 		//Run Threads
 		thread pitchRollYawThread(runOrientation, orientation);
 		thread barometerThread(runBarometer, barometer);
+		thread gpsThread(runGPS, gps);
 		thread autoFlightThread(runAutoFlight, autoFlight);
 		thread pidController(runPid, pid);
 		thread sqlThread(runSQL, sql, orientation, ultrasonic);
@@ -211,6 +227,7 @@ int FlightController::run()
 		serverThread.join();
 		pitchRollYawThread.join();
 		barometerThread.join();
+		gpsThread.join();
 		autoFlightThread.join();
 		pidController.join();
 		sqlThread.join();

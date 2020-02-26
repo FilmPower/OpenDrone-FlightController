@@ -16,7 +16,7 @@ using namespace std;
 
 Orientation::Orientation()
 {
-	this->bno = new BNO080();
+	//this->bno = new BNO080();
 }
 
 Orientation::~Orientation()
@@ -30,7 +30,7 @@ Orientation::~Orientation()
 void Orientation::runOrientation()
 {
 	this->run = true;
-	this->bno->runBNO();
+	//this->bno->runBNO();
 }
 
 /**
@@ -64,10 +64,14 @@ double *Orientation::getPitchRollReal()
 	static double ar[4];
 	if (this->run)
 	{
-		ar[0] = this->bno->gyroIntegratedRotationVectorData.lastPitch;
+		/*ar[0] = this->bno->gyroIntegratedRotationVectorData.lastPitch;
 		ar[1] = this->bno->gyroIntegratedRotationVectorData.lastRoll;
 		ar[2] = this->bno->gyroIntegratedRotationVectorData.lastYaw;
-		ar[3] = this->bno->gyroIntegratedRotationVectorData.time;
+		ar[3] = this->bno->gyroIntegratedRotationVectorData.time;*/
+		ar[0] = 0.0;
+		ar[1] = 0.0;
+		ar[2] = 0.0;
+		ar[3] = 0.0;
 	}
 	else
 	{
@@ -90,10 +94,14 @@ double *Orientation::getPitchRoll()
 	static double ar[4];
 	if (this->run)
 	{
-		ar[0] = this->bno->gyroIntegratedRotationVectorData.lastPitch - calPitch;
+		/*ar[0] = this->bno->gyroIntegratedRotationVectorData.lastPitch - calPitch;
 		ar[1] = this->bno->gyroIntegratedRotationVectorData.lastRoll - calRoll;
 		ar[2] = this->bno->gyroIntegratedRotationVectorData.lastYaw - calYaw;
-		ar[3] = this->bno->gyroIntegratedRotationVectorData.time;
+		ar[3] = this->bno->gyroIntegratedRotationVectorData.time; */
+		ar[0] = 0.0;
+		ar[1] = 0.0;
+		ar[2] = 0.0;
+		ar[3] = 0.0;
 	}
 	else
 	{

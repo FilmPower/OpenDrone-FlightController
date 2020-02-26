@@ -258,6 +258,10 @@ void PID::setAutoFlight(AutoFlight* a) {
 	autoFlight = a;
 }
 
+void PID::setWayPoints(std::string points) {
+	autoFlight->setWaypoints(points);
+}
+
 /**
 	This method is used to set the P-Part of the Pitch/Roll PIDs (only for testing!)
 	@return void

@@ -19,6 +19,7 @@
     <ClCompile Include="Sensor\GYUS42.cpp" />
     <ClCompile Include="Controller\AutoFlight.cpp" />
     <ClCompile Include="Controller\WayPoint.cpp" />
+    <ClCompile Include="Sensor\BN880.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\Calibration.h" />
@@ -43,6 +44,8 @@
     <ClInclude Include="Sensor\GYUS42.h" />
     <ClInclude Include="Controller\AutoFlight.h" />
     <ClInclude Include="Controller\WayPoint.h" />
+    <ClInclude Include="Sensor\BN880.h" />
+    <ClInclude Include="Sensor\AbstractSensor\GPS.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="CONFIG.xml" />

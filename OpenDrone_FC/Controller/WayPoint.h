@@ -7,9 +7,12 @@ private:
 	double altitude;
 
 public:
-	WayPoint(double lat, double lon, double alt);
+	WayPoint(double lat, double lon);
+	WayPoint();
+	
 	double getLatitude();
 	double getLongitude();
-	double getAltitude();
+	double setLatitude(double lat);
+	double setLongitude(double longi);
 };
 

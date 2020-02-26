@@ -97,6 +97,7 @@
     <ClCompile Include="Sensor\BMP280.cpp" />
     <ClCompile Include="Sensor\BNO080.cpp" />
     <ClCompile Include="Sensor\GYUS42.cpp" />
+    <ClCompile Include="Sensor\BN880.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\AutoFlight.h" />
@@ -108,6 +109,7 @@
     <ClInclude Include="Database\SQLite.h" />
     <ClInclude Include="Network\Command.h" />
     <ClInclude Include="Network\Modbus.h" />
+    <ClInclude Include="Sensor\AbstractSensor\GPS.h" />
     <ClInclude Include="Sensor\BMP280.h" />
     <ClInclude Include="Filter\Filter.h" />
     <ClInclude Include="FlightController.h" />
@@ -121,6 +123,7 @@
     <ClInclude Include="Sensor\BNO080.h" />
     <ClInclude Include="Sensor\GYUS42.h" />
     <ClInclude Include="Sensor\AbstractSensor\Ultrasonic.h" />
+    <ClInclude Include="Sensor\BN880.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="CONFIG.xml">

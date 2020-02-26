@@ -1,10 +1,11 @@
 #include "WayPoint.h"
 
-WayPoint::WayPoint(double lat, double lon, double alt) {
+WayPoint::WayPoint(double lat, double lon) {
 	latitude = lat;
 	longitude = lon;
-	altitude = alt;
 }
+
+WayPoint::WayPoint(){}
 
 double WayPoint::getLatitude() {
 	return latitude;
@@ -14,6 +15,10 @@ double WayPoint::getLongitude() {
 	return longitude;
 }
 
-double WayPoint::getAltitude() {
-	return altitude;
+double WayPoint::setLatitude(double lat) {
+	latitude = lat;
+}
+
+double WayPoint::setLongitude(double longi) {
+	longitude = longi;
 }
