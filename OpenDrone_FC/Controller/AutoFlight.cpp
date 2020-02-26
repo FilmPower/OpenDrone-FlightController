@@ -46,6 +46,36 @@ void AutoFlight::stop() {
 	run = false;
 }
 
+void AutoFlight::doAutoFlight() {
+	int curWaypoint = 0;
+	double curDegrees = 0;
+	while (run) {
+		double* curGPS = gps->getGPSValues();
+		WayPoint* curWP = waypoints->at(curWaypoint);
+		
+		double diffLat = curWP->getLatitude - curGPS[0];
+		double diffLong = curWP->getLongitude - curGPS[1];
+
+		if (diffLat < 0.000025 && diffLat > -0.000025 && diffLong < 0.000025 && diffLong > -0.000025) {
+			curWaypoint++;
+			curGPS = gps->getGPSValues();
+			curWP = waypoints->at(curWaypoint);
+		}
+
+		//TODO: Add the degrees from the compass and calc the degrees from -180 to 180
+		double degrees = calcDegrees(curWP);
+		double degreeDiff = degrees - curDegrees;
+		if (degreeDiff < 5 && degreeDiff > -5) {
+			pid->setPitchSetpoint_Degree(20);
+		}
+		else {
+			pid->setYawSetpoint_Degree(degrees);
+		}
+				
+		delay(500);
+	}
+}
+
 void AutoFlight::setWaypoints(string points) {
 	std::string delimiter = ":";
 	size_t pos = 0;
@@ -79,13 +109,6 @@ void AutoFlight::setWaypoints(string points) {
 	}
 }
 
-void AutoFlight::doAutoFlight() {
-	while (run) {
-		
-		delay(5);
-	}
-}
-
 void AutoFlight::setPitchDegree(float degree) {
 	pid->setPitchSetpoint_Degree(degree);
 }
@@ -98,7 +121,7 @@ void AutoFlight::setYawDegree(float degree) {
 	pid->setYawSetpoint_Degree(degree);
 }
 
-void AutoFlight::calcDegrees(WayPoint* curWaypoint) {
+double AutoFlight::calcDegrees(WayPoint* curWaypoint) {
 	double* curP = gps->getGPSValues();
 
 	double length = curWaypoint->getLatitude - curP[0];

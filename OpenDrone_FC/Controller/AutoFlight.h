@@ -29,7 +29,7 @@ private:
 	bool run = false;
 
 	void doAutoFlight();
-	void calcDegrees(WayPoint* curWaypoint);
+	double calcDegrees(WayPoint* curWaypoint);
 
 	void setPitchDegree(float degree);
 	void setRollDegree(float degree);
