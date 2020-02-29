@@ -17,6 +17,7 @@ class PWMMotorTest;
 class SQLite;
 class AutoFlight;
 class GPS;
+class HMC5883L;
 
 class FlightController
 {
@@ -37,6 +38,7 @@ private:
 	GPS *gps;
 	SQLite *sql;
 	AutoFlight *autoFlight;
+	HMC5883L* compass;
 
 	void initObjects();
 };

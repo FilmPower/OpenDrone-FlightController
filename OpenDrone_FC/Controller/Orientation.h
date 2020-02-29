@@ -21,7 +21,7 @@ public:
 	void setCalibration(double *ar);
 
 private:
-	//BNO080 *bno;
+	BNO080 *bno;
 	bool run = false;
 
 	double calPitch = 0.0, calRoll = 0.0, calYaw = 0.0;

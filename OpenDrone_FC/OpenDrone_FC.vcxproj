@@ -98,6 +98,7 @@
     <ClCompile Include="Sensor\BNO080.cpp" />
     <ClCompile Include="Sensor\GYUS42.cpp" />
     <ClCompile Include="Sensor\BN880.cpp" />
+    <ClCompile Include="Sensor\HMC5883L.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\AutoFlight.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="Sensor\GYUS42.h" />
     <ClInclude Include="Sensor\AbstractSensor\Ultrasonic.h" />
     <ClInclude Include="Sensor\BN880.h" />
+    <ClInclude Include="Sensor\HMC5883L.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="CONFIG.xml">

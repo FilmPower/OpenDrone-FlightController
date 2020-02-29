@@ -3,6 +3,7 @@
 #include "PID.h"
 #include "../Sensor/AbstractSensor/Ultrasonic.h"
 #include "../Sensor/AbstractSensor/GPS.h"
+#include "../Sensor/HMC5883L.h"
 #include "WayPoint.h"
 #include "chrono"
 #include <thread>
@@ -19,26 +20,30 @@ int status = 0;
 static void runObjectDetection(PID* pid, Ultrasonic* ultrasonic) {
 	while (1) {
 		int distance = ultrasonic->getDistance();
-		if (distance < 250) {
+		if (distance < 150) {
 			status = 1337;
 			//Stop the drone immediately
 			pid->setPitchSetpoint(1500);
+			pid->landDrone();
 		}
 		delay(20);
 	}
 }
 
-AutoFlight::AutoFlight(PID* p, Ultrasonic* u, GPS* g) {
+AutoFlight::AutoFlight(PID* p, Ultrasonic* u, GPS* g, HMC5883L *m) {
 	pid = p;
 	ultrasonic = u;
 	gps = g;
+	compass = m;
 	pid->setAutoFlight(this);
-	
-	//thread objectDetectionThread(runObjectDetection, pid, ultrasonic);
+	compassValue = compass->compassValue;
+
+	double curYaw = pid->getOrientatin()->getPitchRoll()[2];
+	this->correctionDegree = 0.0; //TODO: Calculate
 }
 
 void AutoFlight::start() {
-	run = true;
+	//run = true;
 	doAutoFlight();
 }
 
@@ -49,12 +54,21 @@ void AutoFlight::stop() {
 void AutoFlight::doAutoFlight() {
 	int curWaypoint = 0;
 	double curDegrees = 0;
+
+	thread objectDetectionThread(runObjectDetection, pid, ultrasonic);
+
 	while (run) {
+		if (status == 1337) {
+			run = false;
+			pid->setPitchSetpoint(1500);
+			break;
+		}
+
 		double* curGPS = gps->getGPSValues();
 		WayPoint* curWP = waypoints->at(curWaypoint);
 		
-		double diffLat = curWP->getLatitude - curGPS[0];
-		double diffLong = curWP->getLongitude - curGPS[1];
+		double diffLat = curWP->getLatitude() - curGPS[0];
+		double diffLong = curWP->getLongitude() - curGPS[1];
 
 		if (diffLat < 0.000025 && diffLat > -0.000025 && diffLong < 0.000025 && diffLong > -0.000025) {
 			curWaypoint++;
@@ -62,18 +76,26 @@ void AutoFlight::doAutoFlight() {
 			curWP = waypoints->at(curWaypoint);
 		}
 
-		//TODO: Add the degrees from the compass and calc the degrees from -180 to 180
-		double degrees = calcDegrees(curWP);
+		double degrees = calcDegrees(curWP) - correctionDegree; //TODO: Check if this is correct
 		double degreeDiff = degrees - curDegrees;
 		if (degreeDiff < 5 && degreeDiff > -5) {
 			pid->setPitchSetpoint_Degree(20);
 		}
 		else {
-			pid->setYawSetpoint_Degree(degrees);
+			//-180° to 180°
+			if (degrees > 180) {
+				double newDegrees = degrees - 360;
+				pid->setYawSetpoint_Degree(newDegrees);
+			}
+			else {
+				pid->setYawSetpoint_Degree(degrees);
+			}
 		}
-				
 		delay(500);
 	}
+
+	objectDetectionThread.join();
+
 }
 
 void AutoFlight::setWaypoints(string points) {
@@ -124,8 +146,8 @@ void AutoFlight::setYawDegree(float degree) {
 double AutoFlight::calcDegrees(WayPoint* curWaypoint) {
 	double* curP = gps->getGPSValues();
 
-	double length = curWaypoint->getLatitude - curP[0];
-	double height = curWaypoint->getLongitude - curP[1];
+	double length = curWaypoint->getLatitude() - curP[0];
+	double height = curWaypoint->getLongitude() - curP[1];
 
 	std::cout << "LengthDiff: " << length << " HeightDiff: " << height << std::endl;
 

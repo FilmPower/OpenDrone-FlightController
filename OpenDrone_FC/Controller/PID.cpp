@@ -231,6 +231,7 @@ void PID::calcPid() {
 					heightControl = true;
 					throttle = 1400;
 					wantedPressure = barometer->getBarometerValues()[1];
+					startPressure = barometer->getBarometerValues()[1];
 				}
 			}
 		}
@@ -338,13 +339,31 @@ void PID::setThrottle(float curThrottle) {
 	@params void
 */
 void PID::landDrone() {
-	std::cout << "Drone too high! AutoStart and HeightControl if off! Landing drone ..." << std::endl;
+	std::cout << "Landing drone ..." << std::endl;
 	std::cout.flush();
 
-	//TODO: Land the drone by changing the wanted distance
-	throttle = 1200;
-	hasHeightControl = false;
-	pid_output_height = 0.0;
+	bool run = true;
+	bool landed = false;
+	while (run) {
+		//Change the wanted Pressure, so the HeightPID can land the drone
+		wantedPressure++;
+		for (int i = 0; i < 10; i++) {
+			if (landed == true) {
+				pwm->ExitMotor();
+			}
+			
+			double distance = ultrasonic->getDistance();
+			double pressure = barometer->getBarometerValues()[1];
+			//Check if the drone is below 20cm --> we have to check that it is not above the max measure (check with the startPressure)
+			if (distance <= 20 && (startPressure-10 < pressure)) {
+				hasHeightControl = false;
+				throttle = 1300;
+				bool landed = true;
+			}
+			
+			delay(33);
+		}
+	}
 }
 
 /**

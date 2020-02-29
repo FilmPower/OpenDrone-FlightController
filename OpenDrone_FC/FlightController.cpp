@@ -10,6 +10,7 @@
 #include "Sensor/BMP280.h"
 #include "Sensor/GYUS42.h"
 #include "Sensor/BN880.h"
+#include "Sensor/HMC5883L.h"
 
 #include "Network/TCPServer.h" 
 #include "Motor/PWMMotorTest.h"
@@ -172,11 +173,12 @@ void FlightController::initObjects()
 	pwm = new PWMMotorTest();
 	ultrasonic = new GYUS42();
 	gps = new BN880();
+	compass = new HMC5883L();
 
 	sql = new SQLite();
 	pid = PID::getInstance(orientation, pwm, barometer, ultrasonic);
 	//TODO: Change the ultrasonic object to the real (second) sensor
-	autoFlight = new AutoFlight(pid, ultrasonic, gps);
+	autoFlight = new AutoFlight(pid, ultrasonic, gps, compass);
 }
 
 /**
@@ -205,6 +207,7 @@ int FlightController::run()
 		signal(SIGINT, &sighandler);
 
 		delay(250);
+
 
 		//Run Threads
 		thread pitchRollYawThread(runOrientation, orientation);

@@ -81,6 +81,7 @@ private:
 	bool emergencyThrottleSet = false;
 	int wantedDistance = 120;
 	double wantedPressure = 0;
+	double startPressure = startPressure;
 
 	float pid_p_gain_roll = 2.0; //1.25             //Gain setting for the roll P-controller 0.65
 	float pid_i_gain_roll = 0.01; // 0.05;          //Gain setting for the roll I-controller 0.0006

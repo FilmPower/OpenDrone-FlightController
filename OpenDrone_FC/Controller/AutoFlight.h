@@ -2,10 +2,10 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include "PID.h"
 #include "../Sensor/AbstractSensor/Ultrasonic.h"
 #include "../Sensor/AbstractSensor/GPS.h"
+#include "../Sensor/HMC5883L.h"
 #include <vector>
 #include "WayPoint.h"
 
@@ -13,7 +13,7 @@
 class AutoFlight
 {
 public:
-	AutoFlight(PID *p, Ultrasonic *u, GPS *g);
+	AutoFlight(PID *p, Ultrasonic *u, GPS *g, HMC5883L* m);
 	~AutoFlight();
 	void start();
 	void stop();
@@ -23,9 +23,12 @@ private:
 	PID* pid;
 	Ultrasonic* ultrasonic;
 	GPS* gps;
+	HMC5883L* compass;
 
 	std::vector<WayPoint *> *waypoints;
 
+	double compassValue;
+	double correctionDegree = 0.0;
 	bool run = false;
 
 	void doAutoFlight();
