@@ -15,15 +15,16 @@ using namespace std;
 #define PI 3.14159265
 
 int status = 0;
+bool runObject = true;
 
 //Obeject-Detection --> TODO: needs to be finished
 static void runObjectDetection(PID* pid, Ultrasonic* ultrasonic) {
-	while (1) {
+	while (runObject) {
 		int distance = ultrasonic->getDistance();
-		if (distance < 150) {
+		if (distance < 150 && distance > 20) {
 			status = 1337;
 			//Stop the drone immediately
-			pid->setPitchSetpoint(1500);
+			pid->setPitchSetpoint_Degree(0);
 			pid->landDrone();
 		}
 		delay(20);
@@ -51,11 +52,17 @@ void AutoFlight::stop() {
 	run = false;
 }
 
+void AutoFlight::startFlying() {
+	run = true;
+}
+
 void AutoFlight::doAutoFlight() {
 	int curWaypoint = 0;
 	double curDegrees = 0;
 
 	thread objectDetectionThread(runObjectDetection, pid, ultrasonic);
+
+	while (!run) { delay(100); }
 
 	while (run) {
 		if (status == 1337) {
@@ -65,15 +72,23 @@ void AutoFlight::doAutoFlight() {
 		}
 
 		double* curGPS = gps->getGPSValues();
-		WayPoint* curWP = waypoints->at(curWaypoint);
+		WayPoint* curWP;
+		if (waypoints->size() < curWaypoint + 1) {
+			curWP = waypoints->at(curWaypoint);
+		}
+		else {
+			pid->landDrone();
+			run = false;
+			break;
+		}
 		
 		double diffLat = curWP->getLatitude() - curGPS[0];
 		double diffLong = curWP->getLongitude() - curGPS[1];
 
 		if (diffLat < 0.000025 && diffLat > -0.000025 && diffLong < 0.000025 && diffLong > -0.000025) {
 			curWaypoint++;
-			curGPS = gps->getGPSValues();
-			curWP = waypoints->at(curWaypoint);
+			//camera->makePhoto();
+			continue;
 		}
 
 		double degrees = calcDegrees(curWP) - correctionDegree; //TODO: Check if this is correct
@@ -83,12 +98,14 @@ void AutoFlight::doAutoFlight() {
 		}
 		else {
 			//-180° to 180°
-			if (degrees > 180) {
-				double newDegrees = degrees - 360;
+			if (degreeDiff > 180) {
+				double newDegrees = degreeDiff - 360;
+				pid->setPitchSetpoint_Degree(0);
 				pid->setYawSetpoint_Degree(newDegrees);
 			}
 			else {
-				pid->setYawSetpoint_Degree(degrees);
+				pid->setPitchSetpoint_Degree(0);
+				pid->setYawSetpoint_Degree(degreeDiff);
 			}
 		}
 		delay(500);
@@ -99,7 +116,6 @@ void AutoFlight::doAutoFlight() {
 }
 
 void AutoFlight::setWaypoints(string points) {
-	std::string delimiter = ":";
 	size_t pos = 0;
 	std::string token;
 	double curVal;
@@ -108,6 +124,7 @@ void AutoFlight::setWaypoints(string points) {
 	double curLat = 0.0;
 	double curLong = 0.0;
 	
+	string delimiter = ":";
 	while ((pos = points.find(delimiter)) != std::string::npos) {
 		token = points.substr(0, pos);
 		curVal = stod(token);

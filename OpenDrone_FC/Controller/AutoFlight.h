@@ -18,6 +18,7 @@ public:
 	void start();
 	void stop();
 	void setWaypoints(std::string points);
+	void startFlying();
 
 private:
 	PID* pid;

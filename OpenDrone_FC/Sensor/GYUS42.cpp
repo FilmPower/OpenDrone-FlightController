@@ -55,5 +55,7 @@ void GYUS42::readVal() {
 		highByte = highByte >> 24;
 		
 		distance = (highByte << 8) | lowByte;
+
+
 	}
 }

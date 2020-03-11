@@ -261,6 +261,7 @@ void PID::setAutoFlight(AutoFlight* a) {
 
 void PID::setWayPoints(std::string points) {
 	autoFlight->setWaypoints(points);
+	autoFlight->startFlying();
 }
 
 /**
@@ -348,8 +349,9 @@ void PID::landDrone() {
 		//Change the wanted Pressure, so the HeightPID can land the drone
 		wantedPressure++;
 		for (int i = 0; i < 10; i++) {
-			if (landed == true) {
+			if (landed) {
 				pwm->ExitMotor();
+				run = false;
 			}
 			
 			double distance = ultrasonic->getDistance();
@@ -358,7 +360,7 @@ void PID::landDrone() {
 			if (distance <= 20 && (startPressure-10 < pressure)) {
 				hasHeightControl = false;
 				throttle = 1300;
-				bool landed = true;
+				landed = true;
 			}
 			
 			delay(33);

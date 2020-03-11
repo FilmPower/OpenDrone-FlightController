@@ -80,14 +80,14 @@ double HMC5883L::getCompass() {
 	return D;
 
 	/*Results:
-		If D is greater than 337.25 degrees or less than 22.5 degrees – North
-		If D is between 292.5 degrees and 337.25 degrees – North-West
+		If D is greater than 337.5 degrees or less than 22.5 degrees – North
+		If D is between 292.5 degrees and 337.5 degrees – North-West
 		If D is between 247.5 degrees and 292.5 degrees – West
 		If D is between 202.5 degrees and 247.5 degrees – South-West
 		If D is between 157.5 degrees and 202.5 degrees – South
 		If D is between 112.5 degrees and 157.5 degrees – South-East
 		If D is between 67.5 degrees and 112.5 degrees – East
-		If D is between 0 degrees and 67.5 degrees – North-East
+		If D is between 22.5 degrees and 67.5 degrees – North-East
 	*/
 }
 

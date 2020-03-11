@@ -110,7 +110,7 @@ void Modbus::Interpret(string str)
 						 //Height Control on
 				case 47: { pid->updateHeightControl(); break; }
 
-				case 420: { pid->setWayPoints(data); break; }
+				case 420: { pid->setWayPoints(data); }
 				}
 			}
 			string parity = result.at(5 + (i * 3));

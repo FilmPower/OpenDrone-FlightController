@@ -58,6 +58,7 @@ BMP280::BMP280()
 	//delay(2000);
 	//wiringPiI2CWriteReg8(fd, CTR_MEAS, 0x11);
 	delay(1000);
+
 	//wiringPiI2CWriteReg8(fd, BMP280_CONFIG, 0x38);
 	wiringPiI2CWriteReg8(fd, BMP280_CONFIG, 0x00);
 	wiringPiI2CWriteReg8(fd, BMP280_CONTROL, 0x3F);
@@ -89,7 +90,7 @@ void BMP280::load_calibration(int fd)
 
 int BMP280::read_raw(int fd, int reg)
 {
-	int raw = SWAP_2BYTES(wiringPiI2CReadReg16(fd, reg));
+	int raw = SWAP_2BYTES(wiringPiI2CReadReg24(fd, reg));
 	raw <<= 8;
 	raw = raw | wiringPiI2CReadReg8(fd, reg + 2);
 	raw >>= 4;
