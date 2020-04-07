@@ -177,7 +177,6 @@ void FlightController::initObjects()
 
 	sql = new SQLite();
 	pid = PID::getInstance(orientation, pwm, barometer, ultrasonic);
-	//TODO: Change the ultrasonic object to the real (second) sensor
 	autoFlight = new AutoFlight(pid, ultrasonic, gps, compass);
 }
 

@@ -17,7 +17,6 @@ using namespace std;
 int status = 0;
 bool runObject = true;
 
-//Obeject-Detection --> TODO: needs to be finished
 static void runObjectDetection(PID* pid, Ultrasonic* ultrasonic) {
 	while (runObject) {
 		int distance = ultrasonic->getDistance();
@@ -31,6 +30,7 @@ static void runObjectDetection(PID* pid, Ultrasonic* ultrasonic) {
 	}
 }
 
+
 AutoFlight::AutoFlight(PID* p, Ultrasonic* u, GPS* g, HMC5883L *m) {
 	pid = p;
 	ultrasonic = u;
@@ -38,9 +38,6 @@ AutoFlight::AutoFlight(PID* p, Ultrasonic* u, GPS* g, HMC5883L *m) {
 	compass = m;
 	pid->setAutoFlight(this);
 	compassValue = compass->compassValue;
-
-	double curYaw = pid->getOrientatin()->getPitchRoll()[2];
-	this->correctionDegree = 0.0; //TODO: Calculate
 }
 
 void AutoFlight::start() {
@@ -87,33 +84,77 @@ void AutoFlight::doAutoFlight() {
 
 		if (diffLat < 0.000025 && diffLat > -0.000025 && diffLong < 0.000025 && diffLong > -0.000025) {
 			curWaypoint++;
-			//camera->makePhoto();
 			continue;
 		}
 
-		double degrees = calcDegrees(curWP) - correctionDegree; //TODO: Check if this is correct
-		double degreeDiff = degrees - curDegrees;
+		double degrees = calcDegrees(curWP);
+		double newDegrees = degrees;
+		//-180° to 180°
+		if (degrees > 180) {
+			newDegrees = degrees - 360;
+		}
+
+		double degreeDiff = newDegrees - curDegrees;
 		if (degreeDiff < 5 && degreeDiff > -5) {
 			pid->setPitchSetpoint_Degree(20);
 		}
 		else {
-			//-180° to 180°
-			if (degreeDiff > 180) {
-				double newDegrees = degreeDiff - 360;
-				pid->setPitchSetpoint_Degree(0);
-				pid->setYawSetpoint_Degree(newDegrees);
+			pid->setPitchSetpoint_Degree(0);
+
+			//Calculate the realDegree according to the results of the Magnetometer
+			double realDegree = newDegrees;
+			if (realDegree >= 0 && realDegree <= 180) {
+				if (compassValue >= 0 && compassValue <= 180) {
+					if (realDegree > compassValue) {
+						realDegree = realDegree - compassValue;
+					}
+					else {
+						realDegree = (compassValue - realDegree) * (-1);
+					}
+				}
+				if (compassValue > 180) {
+					realDegree = (compassValue - realDegree) * (-1);
+					if (realDegree < -180) {
+						realDegree = realDegree + 360;
+					}
+				}
 			}
-			else {
-				pid->setPitchSetpoint_Degree(0);
-				pid->setYawSetpoint_Degree(degreeDiff);
+			else if (realDegree < 0 && realDegree >= -180) {
+				if (compassValue >= 0 && compassValue <= 180) {
+					realDegree = realDegree - compassValue;
+				}
+				if (compassValue > 180) {
+					double newCompass = compassValue - 360;
+					if (realDegree > newCompass) {
+						realDegree = (newCompass - realDegree) * (-1);
+					}
+					else {
+						realDegree = realDegree - newCompass;
+					}
+				}
 			}
+
+			pid->setYawSetpoint_Degree(realDegree);
 		}
+		
+		curDegrees = newDegrees;
 		delay(500);
 	}
 
 	objectDetectionThread.join();
 
 }
+
+/*Results (HMC5883L):
+	If D is greater than 337.5 degrees or less than 22.5 degrees – North
+	If D is between 292.5 degrees and 337.5 degrees – North-West
+	If D is between 247.5 degrees and 292.5 degrees – West
+	If D is between 202.5 degrees and 247.5 degrees – South-West
+	If D is between 157.5 degrees and 202.5 degrees – South
+	If D is between 112.5 degrees and 157.5 degrees – South-East
+	If D is between 67.5 degrees and 112.5 degrees – East
+	If D is between 22.5 degrees and 67.5 degrees – North-East
+*/
 
 void AutoFlight::setWaypoints(string points) {
 	size_t pos = 0;

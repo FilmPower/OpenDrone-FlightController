@@ -18,7 +18,6 @@
 #include "iostream"
 #include "thread"
 
-//TODO: Remove unnecessary code/variables/methods (ArmMotor, ...)
 
 float pid_p_gain_heightHold = 2.5;
 float pid_d_gain_heightHold = 3.3;
@@ -76,7 +75,7 @@ void PID::calcValues()
 	while (run) {
 		calcPid();
 
-		int curThrottle = 0;
+		int curThrottle = throttle;
 		if (startUp)
 		{
 			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
@@ -93,7 +92,6 @@ void PID::calcValues()
 
 		std::cout << throttle << " " << curThrottle << "\n";
 
-		//TODO: Fix this --> throttle given by the user is currently ignored!! Change before next start!
 		esc_1 = curThrottle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
 		esc_2 = curThrottle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
 		esc_3 = curThrottle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
