@@ -206,6 +206,7 @@ void PID::calcPid() {
 
 		if (startUp)
 		{
+			startPressure = barometer->getBarometerValues()[1];
 			pid_error_temp = wantedDistanceStart - curDistance;
 
 			bool firstTimeElse = false;
@@ -242,7 +243,6 @@ void PID::calcPid() {
 					heightControl = true;
 					throttle = startThrottleAltitude;
 					wantedPressure = barometer->getBarometerValues()[1];
-					startPressure = barometer->getBarometerValues()[1];
 				}
 			}
 		}
