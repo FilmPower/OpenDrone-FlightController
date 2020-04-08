@@ -4,7 +4,7 @@
  * Purpose: This class is used to calculate the speed of the single motors of the drone
  *
  * 	@author Thomas Brych, Tim Klecka
- * 	@version 0.0.2 27.06.2019
+ * 	@version 1.0.0 20.03.2020
  */
 #include "PID.h"
 
@@ -104,9 +104,6 @@ void PID::calcValues()
 			curThrottle = throttle;
 		}
 
-		//std::cout << "Thr: " << throttle << "CurTrh: " << curThrottle << std::endl;
-		//std::cout.flush();
-
 		esc_1 = curThrottle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
 		esc_2 = curThrottle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
 		esc_3 = curThrottle + pid_output_pitch - pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 3 (rear-left - CCW)
@@ -128,7 +125,6 @@ void PID::calcValues()
 		pwm->SetSpeed(2, esc_2);	//Rear left
 		pwm->SetSpeed(3, esc_3);	//Rear right
 		pwm->SetSpeed(0, esc_4);	//Front right
-		//std::cout << "FR: " << esc_4 << " FL: " << esc_1 << " RL: " << esc_2 << " RR: " << esc_3 << std::endl;
 
 		delay(5);
 		log = true;
@@ -263,8 +259,6 @@ void PID::calcPid() {
 			pid_output_height = curHeightHoldP + pid_i_mem_heightHold + curHeightHoldD;
 			pid_last_heightHold_error = pid_error_temp;
 
-			std::cout << "Err: " << pid_error_temp << ", P: " << curHeightHoldP << ", I: " <<
-				pid_i_mem_heightHold << ", D: " << curHeightHoldD << ", OutH: " << pid_output_height << "  ";
 		}
 		else
 		{
@@ -277,10 +271,19 @@ void PID::calcPid() {
 	}
 }
 
+/**
+	This method set the autoFlightObject in the PID-Object
+	@return void
+
+*/
 void PID::setAutoFlight(AutoFlight* a) {
 	autoFlight = a;
 }
 
+/**
+	This methods sets the waypoints in the AutoFlight-Objects and starts the AutoFlight after that
+	@return void
+*/
 void PID::setWayPoints(std::string points) {
 	autoFlight->setWaypoints(points);
 	autoFlight->startFlying();
@@ -434,13 +437,13 @@ void PID::setRollSetpoint(int curRollSetpoint) {
 }
 
 /**
-	This method is used to set the wanted yaw-value (rotate the drone)
+	This method is used to set the wanted yaw-value (rotate the drone) - (deprecated)
 	@return void
 
 	@params int curYawSetpoint
 */
 void PID::setYawSetpoint(int curYawSetpoint) {
-	/*int setPoint = curYawSetpoint;
+	int setPoint = curYawSetpoint;
 	if (setPoint >= 1000 && setPoint <= 2000) {
 		int diff = 0;
 		if (setPoint > 1480 && setPoint < 1520) {
@@ -453,7 +456,7 @@ void PID::setYawSetpoint(int curYawSetpoint) {
 			diff = (setPoint - 1520)*-1;
 		}
 		pid_yaw_setpoint = diff / 5;
-	}*/
+	}
 }
 
 /**
@@ -570,6 +573,10 @@ PWMMotorTest *PID::getPwmMotorTest() {
 	return pwm;
 }
 
+/**
+	This method is used to set the PitchSetpoint in Degrees
+	@return void
+*/
 void PID::setPitchSetpoint_Degree(float degree) {
 	if (degree >= -maxAngle && degree <= maxAngle) {
 		pid_pitch_setpoint = degree;
@@ -582,6 +589,10 @@ void PID::setPitchSetpoint_Degree(float degree) {
 	}
 }
 
+/**
+	This method is used to set the RollSetpoint in Degrees
+	@return void
+*/
 void PID::setRollSetpoint_Degree(float degree) {
 	if (degree >= -maxAngle && degree <= maxAngle) {
 		pid_roll_setpoint = degree;
@@ -594,6 +605,10 @@ void PID::setRollSetpoint_Degree(float degree) {
 	}
 }
 
+/**
+	This method is used to set the YawSetpoint in Degrees
+	@return void
+*/
 void PID::setYawSetpoint_Degree(float degree) {
 	int yawMaxAngle = 180;
 	if (degree >= -yawMaxAngle && degree <= yawMaxAngle) {

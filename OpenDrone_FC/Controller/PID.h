@@ -4,7 +4,7 @@
  * Purpose: This class is used to calculate the speed of the single motors of the drone
  *
  * 	@author Thomas Brych, Tim Klecka
- * 	@version 0.0.2 27.06.2019
+ * 	@version 1.0.0 20.03.2020
  */
 #include "Orientation.h"
 #include "iostream"
@@ -37,7 +37,8 @@ public:
   
   	void updateHeightControl();
  	void setWayPoints(std::string points);
-  
+	void landDrone();
+
 	//Used to fly the drone
 	void setThrottle(float curThrottle);
 	void setPitchSetpoint(int curPitchSetpoint);
