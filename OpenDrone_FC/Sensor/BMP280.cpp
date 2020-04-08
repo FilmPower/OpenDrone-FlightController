@@ -90,7 +90,7 @@ void BMP280::load_calibration(int fd)
 
 int BMP280::read_raw(int fd, int reg)
 {
-	int raw = SWAP_2BYTES(wiringPiI2CReadReg24(fd, reg));
+	int raw = SWAP_2BYTES(wiringPiI2CReadReg16(fd, reg));
 	raw <<= 8;
 	raw = raw | wiringPiI2CReadReg8(fd, reg + 2);
 	raw >>= 4;
