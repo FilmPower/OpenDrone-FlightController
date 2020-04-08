@@ -10,10 +10,10 @@
 #include <chrono>
 #include <ctime>  
 
-float pid_p_gain_heightHold = 3.5;
+/*float pid_p_gain_heightHold = 3.5;
 float pid_i_gain_heightHold = 1.5;
 float pid_d_gain_heightHold = 4.5;
-int startThrottleAltitude = 1450;
+int startThrottleAltitude = 1450;*/
 
 
 PID *PID::instance = 0;
@@ -102,8 +102,8 @@ void PID::calcValues()
 			curThrottle = throttle;
 		}
 
-		std::cout << "Thr: " << throttle << "CurTrh: " << curThrottle << std::endl;
-		std::cout.flush();
+		//std::cout << "Thr: " << throttle << "CurTrh: " << curThrottle << std::endl;
+		//std::cout.flush();
 
 		esc_1 = curThrottle - pid_output_pitch + pid_output_roll - pid_output_yaw;   //Calculate the pulse for esc 1 (front-right - CCW)
 		esc_2 = curThrottle + pid_output_pitch + pid_output_roll + pid_output_yaw;   //Calculate the pulse for esc 2 (rear-right - CW)
@@ -146,12 +146,6 @@ void PID::calcValues()
 */
 void PID::calcPid() {
 	curPitchRollYaw = orientation->getPitchRoll();
-	//Mock:
-	curPitchRollYaw[0] = 0.0;
-	curPitchRollYaw[1] = 0.0;
-	curPitchRollYaw[2] = 0.0;
-
-	//std::cout << ar[0] << " " << ar[1] << " " << ar[2] << " " << std::endl;
 
 	//Roll calculations
 	pid_error_temp = curPitchRollYaw[1] - pid_roll_setpoint;
@@ -245,34 +239,29 @@ void PID::calcPid() {
 					startUp = false;
 					heightControl = true;
 					throttle = startThrottleAltitude;
-					//wantedPressure = barometer->getBarometerValues()[1];
-					//Mock:
-					wantedPressure = 1000;
+					wantedPressure = barometer->getBarometerValues()[1];
 				}
 			}
 		}
 		else if (heightControl)
 		{
 			//Stable the drone at the given wantedPressure (for testing this value is fixed at 1.20m)
-			//double curPressure = barometer->getBarometerValues()[1];
-			//Mock:
-			//double curPressure = 1005;
-			double curPressure = 995; //approx. 40cm difference
+			double curPressure = barometer->getBarometerValues()[1];
+
 			pid_error_temp = (curPressure - wantedPressure);
 
 			pid_i_mem_heightHold += pid_i_gain_heightHold * pid_error_temp;
 			if (pid_i_mem_heightHold > pid_max_heightHold)pid_i_mem_heightHold = pid_max_heightHold;
 			else if (pid_i_mem_heightHold < pid_max_heightHold * -1)pid_i_mem_heightHold = pid_max_heightHold * -1;
 
-			//This are temporary variables used for testing the impact of the three parts of the PID-Controller
 			float curHeightHoldP = pid_p_gain_heightHold * pid_error_temp;
 			float curHeightHoldD = pid_d_gain_heightHold * (pid_error_temp - pid_last_heightHold_error);
 
-			//pid_output_height = pid_p_gain_heightHold * pid_error_temp + pid_i_mem_heightHold + pid_d_gain_heightHold * ((pid_error_temp - pid_last_heightHold_error));
 			pid_output_height = curHeightHoldP + pid_i_mem_heightHold + curHeightHoldD;
 			pid_last_heightHold_error = pid_error_temp;
 
-			std::cout << "Err: " << pid_error_temp << "P: " << curHeightHoldP << "I: " << pid_i_mem_heightHold << "D: " << curHeightHoldD << "OutH: " << pid_output_height << std::endl;
+			std::cout << "Err: " << pid_error_temp << ", P: " << curHeightHoldP << ", I: " <<
+				pid_i_mem_heightHold << ", D: " << curHeightHoldD << ", OutH: " << pid_output_height << "  ";
 		}
 		else
 		{
@@ -429,19 +418,6 @@ void PID::armMotor() {
 	pwm->ExitMotor();
 	pwm->ArmMotor();
 
-	/*
-	//Old code --> might be deleted soon
-	double val = 0.0;
-	int vals = 20;
-	for (int i = 0; i < vals; i++) {
-		val += barometer->getBarometerValues()[1];
-		delay(25);
-	}
-
-	double baroSubMax = 0.47;	//The drone should not get higher than 3m --> 0.47
-
-	maxBaroVal = (val / vals) - baroSubMax; 
-	*/
 	std::cout << "Armed ..." << std::endl;
 }
 

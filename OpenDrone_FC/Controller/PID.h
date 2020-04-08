@@ -50,6 +50,12 @@ public:
 	void setD(float curD);
 
 private:
+	/* These variables are used for the HeightControl: */
+	float pid_p_gain_heightHold = 2.5;
+	float pid_i_gain_heightHold = 0.5;
+	float pid_d_gain_heightHold = 4.5;
+	int startThrottleAltitude = 1450;		//The default throttle after reaching the wanted height
+
 	PID(Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u);
 	PWMMotorTest *pwm = NULL;
 	Orientation *orientation = NULL;
