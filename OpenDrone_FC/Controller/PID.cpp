@@ -10,12 +10,6 @@
 #include <chrono>
 #include <ctime>  
 
-/*float pid_p_gain_heightHold = 3.5;
-float pid_i_gain_heightHold = 1.5;
-float pid_d_gain_heightHold = 4.5;
-int startThrottleAltitude = 1450;*/
-
-
 PID *PID::instance = 0;
 
 PID::PID(Orientation *o, PWMMotorTest *p, Barometer *b, Ultrasonic *u)
