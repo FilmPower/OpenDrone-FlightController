@@ -35,8 +35,8 @@ public:
 	bool isInit();
 	void interruptPid();
   
-  void updateHeightControl();
-  void setWayPoints(std::string points);
+  	void updateHeightControl();
+ 	void setWayPoints(std::string points);
   
 	//Used to fly the drone
 	void setThrottle(float curThrottle);
@@ -112,6 +112,7 @@ private:
 	bool heightControl = false;	//If heightControl should be used
 	bool hasHeightControl = false;
 	int wantedDistanceStart = 120;	//The wanted distance when auto-starting the drone
+	int startPressure = 0;
 	double wantedPressure = 0;
 
 	//Default variables
