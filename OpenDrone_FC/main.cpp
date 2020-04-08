@@ -1,22 +1,10 @@
-/**********************************************************************
-* !! WORK IN PROGRESS !!
-* 
-* Some classes/methods are not
-* described or undone!
-* The Sensor classes are depricated and not described yet, because
-* many of them are currently not in use!
-*    --> GYUS42, BNO080, BMP280 are currently in use on the drone!
-*
-* !! WORK IN PROGRESS !!
-***********************************************************************/
-
 /*
  * Copyright (c) OpenDrone, 2018.  All rights reserved.
  * The entire project (including this file) is licensed under the GNU GPL v3.0
- * Purpose: The main class of the OpenDrone-Project
+ * Purpose: The class, that initializes all objects and starts all the necessary threads
  *
- * 	@author Tim Klecka, Thomas Brych
- * 	@version 0.0.2 26.06.2019
+ * 	@author Thomas Brych, Tim Klecka
+ * 	@version 1.0.0 20.03.2020
  */
 #include "FlightController.h"
 #include <iostream>

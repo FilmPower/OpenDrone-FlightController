@@ -4,7 +4,7 @@
  * Purpose: The class, that initializes all objects and starts all the necessary threads
  *
  * 	@author Thomas Brych, Tim Klecka
- * 	@version 0.0.2 26.06.2019
+ * 	@version 1.0.0 20.03.2020
  */
 #include "FlightController.h"
 #include "Sensor/BMP280.h"
