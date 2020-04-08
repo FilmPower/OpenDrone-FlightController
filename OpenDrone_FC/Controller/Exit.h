@@ -1,6 +1,6 @@
 #pragma once
-#include "../Network/TCPServer.h"
-#include <iostream>
+class TCPServer;
+
 class Exit
 {
 public:

@@ -1,7 +1,9 @@
-[![CodeFactor](https://www.codefactor.io/Content/badges/A.svg)](https://www.codefactor.io/repository/github/opendroneat/opendrone-flightcontroller/overview/develop)
-[![Gitter chat](https://badges.gitter.im/USER/REPO.png)](https://gitter.im/OpenDroneAT/Lobby "Gitter chat")
-  
+<img src="images/Opendrone_Logo_0205x.png" alt="OpenDrone"/>  
+
 # !! Work in Progress !!  
+## Partners
+<img src="images/CONRAD_logo.png" alt="Conrad" width="200"/>
+
 ## Infomation
   
 Open Drone Open-source Project  
@@ -15,7 +17,8 @@ So this is an open source project for a self-flying and navigating drone.
 We also got an Open-source Frame Created with ❤️ by our 3D Printer  
 
 Used technologies:  
-* Android - Our App runs on Android  
+* Android - Our App runs on Android but ->
+* now we have also an Cross-Platform App with React Native
 * C++ - Our flight controller runs on C++  
 * Raspberry Pi - The brain of the drone  
 ---  
@@ -38,9 +41,9 @@ Used technologies:
 * Reading Sensors ✔  
 * Filtering sensor values ✔ 
 * PID Controller ⏳  
-  * Ptch / Roll  ✔ 
+  * Pitch / Roll  ✔ (Works but needs some tuning)
   * Yaw ⏳
-  * Hight ⏳
+  * Height ⏳
   * Position ⏳
 * Communtication ✔ works but we might change the protocoll
 * Fly it to the moon and back ⏳
@@ -61,7 +64,7 @@ Used technologies:
 * BMP280 ✔  
 * BMP388 ⏳  
 ### GPS
-* BN-880 ⏳ 
+* BN-880 ✔ 
 ### Other
 * HC-SR04 ✔  
 ---  

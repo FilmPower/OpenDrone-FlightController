@@ -13,6 +13,7 @@
 #include "../Controller/Orientation.h"
 #include "../Sensor/AbstractSensor/Ultrasonic.h"
 #include "../Controller/PID.h"
+#include "../Network/TCPServer.h"
 #include "wiringPi.h"
 #include <string.h>
 #include <iostream>
@@ -61,7 +62,7 @@ void SQLite::startSQL(Orientation *o, Ultrasonic *ultrasonic) {
 	const char* data = "Callback function called";*/
 
 	PID *pid = PID::getInstanceCreated();
-	TCPServer *tcp = TCPServer::getInstance();
+	//TCPServer *tcp = TCPServer::getInstance();
 	ofstream altLoggingFile;
 	altLoggingFile.open("Logger.csv");
 	altLoggingFile << "Time;CurBaroVal;UltrasonicDistance;ESC1;ESC2;ESC3;ESC4;Throttle;Pitch;Roll;Yaw;OuputHeightPID;OutputPitchPID;OutputRollPID;OutputYawPID;ErrorPitch;ErrorRoll;ErrorYaw" << std::endl;

@@ -7,12 +7,11 @@
  * 	@version 0.0.2 27.06.2019
  */
 #include "Orientation.h"
-#include "../Motor/PWMMotorTest.h"
-#include "../Sensor/AbstractSensor/Barometer.h"
-#include "../Sensor/AbstractSensor/Ultrasonic.h"
-#include "wiringPi.h"
 #include "iostream"
-#include "thread"
+
+class PWMMotorTest;
+class Barometer;
+class Ultrasonic;
 
 #pragma once
 class PID
@@ -106,7 +105,7 @@ private:
 	int esc_1, esc_2, esc_3, esc_4;
 	int throttle = 1050;
 	float maxAngle = 20;
-	float factorControl = maxAngle / 480;			//Maximum maxAngle° (480 steps)
+	float factorControl = maxAngle / 480;			//Maximum maxAngleÂ° (480 steps)
 	bool run = false, stop = false, log = false;
 	void calcPid();
 };

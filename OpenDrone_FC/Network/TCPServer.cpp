@@ -24,9 +24,8 @@
 #include "../Controller/PID.h"
 #include <list>
 #include "Command.h"
+#include <wiringPi.h>
 
-#define TRUE   1  
-#define FALSE  0  
 #define PORT 2018  
 
 TCPServer* TCPServer::instance = 0;
@@ -162,8 +161,7 @@ void TCPServer::getTemp() {
     FILE *temperatureFile;
     double T;
     temperatureFile = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
-    if (temperatureFile == NULL)
-        ; //print some message
+    if (temperatureFile == NULL) { ; /* print some message */ }
     fscanf(temperatureFile, "%lf", &T);
     T /= 1000;
     fclose(temperatureFile);

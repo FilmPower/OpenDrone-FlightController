@@ -7,8 +7,15 @@
  * 	@version 0.0.2 27.06.2019
  */
 #include "PID.h"
+
+#include "../Motor/PWMMotorTest.h"
+#include "../Sensor/AbstractSensor/Barometer.h"
+#include "../Sensor/AbstractSensor/Ultrasonic.h"
 #include <chrono>
-#include <ctime>  
+#include <ctime> 
+#include "wiringPi.h"
+#include "iostream"
+#include "thread"
 
 PID *PID::instance = 0;
 

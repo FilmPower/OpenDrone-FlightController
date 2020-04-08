@@ -7,7 +7,7 @@
  * 	@version 0.0.2 27.06.2019
  */
 #pragma once
-#include "../Sensor/BNO080.h"
+class BNO080;
 
 class Orientation
 {

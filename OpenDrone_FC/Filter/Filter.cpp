@@ -43,7 +43,7 @@ double Filter::addValue(double value)
 		this->list1.pop_front();
 	}
 
-	double num;
+	double num = 0.0;
 	list <double> ::iterator i;
 	for (i = this->list1.begin(); i != this->list1.end(); ++i)
 	{

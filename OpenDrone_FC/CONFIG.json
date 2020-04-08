@@ -1,0 +1,158 @@
+{
+    "opendrone": {
+        "droneName": "OpenDrone",
+        "droneCalibration": {},
+        "usedSensors": {
+            "accelerometer": {
+                "-sensor": "BNO080",
+                "protocol": "SPI",
+                "address": "",
+                "possible": [
+                    "BNO080",
+                    "BNO085",
+                    "-MPU6080",
+                    "-BMI088",
+                    "-BMF055"
+                ]
+            },
+            "gyroscope": {
+                "-sensor": "BNO080",
+                "protocol": "SPI",
+                "address": "",
+                "possible": [
+                    "BNO080",
+                    "BNO085",
+                    "-MPU6080",
+                    "-BMI088",
+                    "-BMF055"
+                ]
+            },
+            "barometer": {
+                "-sensor": "BMP280",
+                "protocol": "I2C",
+                "address": "0x77",
+                "possible": [
+                    "BMP388",
+                    "BMP180",
+                    "BMP280"
+                ]
+            },
+            "magnetometer": {
+                "-sensor": "BNO080",
+                "protocol": "SPI",
+                "address": "",
+                "possible": [
+                    "BNO080",
+                    "BNO085",
+                    "BMM150",
+                    "HMC5883L"
+                ]
+            }
+        },
+        "pinConfiguration": {
+            "pin1": {
+                "-pin": "3.3V",
+                "possible": "3.3V"
+            },
+            "pin2": {
+                "-pin": "5V",
+                "possible": "5V"
+            },
+            "pin3": {
+                "-pin": "I2C_SDA",
+                "possible": "I2C_SDA"
+            },
+            "pin4": {
+                "-pin": "5V",
+                "possible": "5V"
+            },
+            "pin5": {
+                "-pin": "I2C_SCL",
+                "possible": "I2C_SCL"
+            },
+            "pin6": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin7": {},
+            "pin8": {
+                "possible": [
+                    "UART_TX",
+                    "GPIO"
+                ]
+            },
+            "pin9": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin10": {
+                "possible": [
+                    "UART_RX",
+                    "GPIO"
+                ]
+            },
+            "pin11": {},
+            "pin12": {},
+            "pin13": {},
+            "pin14": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin15": {},
+            "pin16": {},
+            "pin17": {
+                "-pin": "3.3V",
+                "possible": "3.3V"
+            },
+            "pin18": {},
+            "pin19": {},
+            "pin20": {},
+            "pin21": {},
+            "pin22": {},
+            "pin23": {},
+            "pin24": {},
+            "pin25": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin26": {},
+            "pin27": {
+                "-pin": "DO NOT USE",
+                "possible": "DO NOT USE"
+            },
+            "pin28": {
+                "-pin": "DO NOT USE",
+                "possible": "DO NOT USE"
+            },
+            "pin29": {},
+            "pin30": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin31": {},
+            "pin32": {},
+            "pin33": {},
+            "pin34": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin35": {},
+            "pin36": {},
+            "pin37": {},
+            "pin38": {},
+            "pin39": {
+                "-pin": "GND",
+                "possible": "GND"
+            },
+            "pin40": {}
+        },
+        "WIFI":{
+            "ssid": "OpenDrone",
+            "inet": "eth0",
+            "wlan": "wlan0",
+            "password": 1234567890,
+            "netmask": "255.255.255.0",
+            "ip": "192.168.1.254"
+        }
+    }
+}

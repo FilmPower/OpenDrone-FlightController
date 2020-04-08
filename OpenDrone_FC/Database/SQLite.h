@@ -9,8 +9,8 @@
 #pragma once
 #include <string>
 #include <sqlite3.h>
-#include "../Controller/Orientation.h"
-#include "../Sensor/AbstractSensor/Ultrasonic.h"
+class Orientation;
+class Ultrasonic;
 
 class SQLite
 {
