@@ -15,6 +15,9 @@ class Exit;
 class PID;
 class PWMMotorTest;
 class SQLite;
+class AutoFlight;
+class GPS;
+class HMC5883L;
 
 class FlightController
 {
@@ -32,7 +35,10 @@ private:
 	Exit *error;
 	PID *pid;
 	PWMMotorTest *pwm;
+	GPS *gps;
 	SQLite *sql;
+	AutoFlight *autoFlight;
+	HMC5883L* compass;
 
 	void initObjects();
 };

@@ -11,6 +11,7 @@
 #include "../Motor/PWMMotorTest.h"
 #include "../Sensor/AbstractSensor/Barometer.h"
 #include "../Sensor/AbstractSensor/Ultrasonic.h"
+#include "AutoFlight.h"
 #include <chrono>
 #include <ctime> 
 #include "wiringPi.h"
@@ -69,7 +70,7 @@ void PID::calcValues()
 	while (run) {
 		calcPid();
 
-		int curThrottle = 0;
+		int curThrottle = throttle;
 		if (startUp)
 		{
 			if (throttle + pid_output_height < 1750 && throttle + pid_output_height > 1200) {
@@ -205,6 +206,7 @@ void PID::calcPid() {
 
 		if (startUp)
 		{
+			startPressure = barometer->getBarometerValues()[1];
 			pid_error_temp = wantedDistanceStart - curDistance;
 
 			bool firstTimeElse = false;
@@ -273,6 +275,15 @@ void PID::calcPid() {
 	{
 		pid_output_height = 0.0;
 	}
+}
+
+void PID::setAutoFlight(AutoFlight* a) {
+	autoFlight = a;
+}
+
+void PID::setWayPoints(std::string points) {
+	autoFlight->setWaypoints(points);
+	autoFlight->startFlying();
 }
 
 /**
@@ -344,6 +355,40 @@ void PID::setThrottle(float curThrottle) {
 	}
 }
 
+/*
+	This method is used to init the landing of the drone
+	@return void
+
+	@params void
+*/
+void PID::landDrone() {
+	std::cout << "Landing drone ..." << std::endl;
+	std::cout.flush();
+
+	bool run = true;
+	bool landed = false;
+	while (run) {
+		//Change the wanted Pressure, so the HeightPID can land the drone
+		wantedPressure++;
+		for (int i = 0; i < 10; i++) {
+			if (landed) {
+				pwm->ExitMotor();
+				run = false;
+			}
+			
+			double distance = ultrasonic->getDistance();
+			double pressure = barometer->getBarometerValues()[1];
+			//Check if the drone is below 20cm --> we have to check that it is not above the max measure (check with the startPressure)
+			if (distance <= 20 && (startPressure-10 < pressure)) {
+				hasHeightControl = false;
+				throttle = 1300;
+				landed = true;
+			}
+			
+			delay(33);
+		}
+	}
+}
 
 /**
 	This method is used to set the wanted pitch-value (fly forward/backward)
@@ -523,4 +568,41 @@ Orientation *PID::getOrientatin() {
 */
 PWMMotorTest *PID::getPwmMotorTest() {
 	return pwm;
+}
+
+void PID::setPitchSetpoint_Degree(float degree) {
+	if (degree >= -maxAngle && degree <= maxAngle) {
+		pid_pitch_setpoint = degree;
+	}
+	else if (degree < -maxAngle) {
+		pid_pitch_setpoint = -maxAngle;
+	}
+	else if (degree > maxAngle) {
+		pid_pitch_setpoint = maxAngle;
+	}
+}
+
+void PID::setRollSetpoint_Degree(float degree) {
+	if (degree >= -maxAngle && degree <= maxAngle) {
+		pid_roll_setpoint = degree;
+	}
+	else if (degree < -maxAngle) {
+		pid_roll_setpoint = -maxAngle;
+	}
+	else if (degree > maxAngle) {
+		pid_roll_setpoint = maxAngle;
+	}
+}
+
+void PID::setYawSetpoint_Degree(float degree) {
+	int yawMaxAngle = 180;
+	if (degree >= -yawMaxAngle && degree <= yawMaxAngle) {
+		pid_yaw_setpoint = degree;
+	}
+	else if (degree < -yawMaxAngle) {
+		pid_yaw_setpoint = -yawMaxAngle;
+	}
+	else if (degree > yawMaxAngle) {
+		pid_yaw_setpoint = yawMaxAngle;
+	}
 }

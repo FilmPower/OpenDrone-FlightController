@@ -58,6 +58,7 @@ BMP280::BMP280()
 	//delay(2000);
 	//wiringPiI2CWriteReg8(fd, CTR_MEAS, 0x11);
 	delay(1000);
+
 	//wiringPiI2CWriteReg8(fd, BMP280_CONFIG, 0x38);
 	wiringPiI2CWriteReg8(fd, BMP280_CONFIG, 0x00);
 	wiringPiI2CWriteReg8(fd, BMP280_CONTROL, 0x3F);

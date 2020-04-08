@@ -15,9 +15,12 @@ public:
 	HMC5883L();
 	~HMC5883L();
 	double *getMagnetometerValues();
+    double compassValue;
 
 private:
 	int fd;
 	short readRawData(int addr);
+    double getCompass();
+
 };
 

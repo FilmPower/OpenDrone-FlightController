@@ -8,10 +8,12 @@
  */
 #include "Orientation.h"
 #include "iostream"
+#include <string.h>
 
 class PWMMotorTest;
 class Barometer;
 class Ultrasonic;
+class AutoFlight;
 
 #pragma once
 class PID
@@ -22,22 +24,28 @@ public:
 	static PID *getInstanceCreated();
 	static PID *instance;
 
+
 	Orientation* getOrientatin();
 	PWMMotorTest* getPwmMotorTest();
 
 	void calcValues();
-	void updateHeightControl();
+
 	void setRun(bool curRun);
 	void armMotor();
 	bool isInit();
 	void interruptPid();
-
+  
+  	void updateHeightControl();
+ 	void setWayPoints(std::string points);
+  
 	//Used to fly the drone
 	void setThrottle(float curThrottle);
 	void setPitchSetpoint(int curPitchSetpoint);
 	void setRollSetpoint(int curRollSetpoint);
 	void setYawSetpoint(int curYawSetpoint);
+	void setAutoFlight(AutoFlight* a);
 
+  
 	//Used for logging
 	int *getThrottles();
 	float *getPIDVals();
@@ -47,6 +55,10 @@ public:
 	void setP(float curP);
 	void setI(float curI);
 	void setD(float curD);
+
+	void setPitchSetpoint_Degree(float degree);
+	void setRollSetpoint_Degree(float degree);
+	void setYawSetpoint_Degree(float degree);
 
 private:
 	/* These variables are used for the HeightControl: */
@@ -60,6 +72,7 @@ private:
 	Orientation *orientation = NULL;
 	Barometer *barometer = NULL;
 	Ultrasonic *ultrasonic = NULL;
+	AutoFlight *autoFlight = NULL;
 
 	float pid_error_temp;
 	float pid_cur_val = 0;
@@ -99,6 +112,7 @@ private:
 	bool heightControl = false;	//If heightControl should be used
 	bool hasHeightControl = false;
 	int wantedDistanceStart = 120;	//The wanted distance when auto-starting the drone
+	int startPressure = 0;
 	double wantedPressure = 0;
 
 	//Default variables
@@ -108,4 +122,6 @@ private:
 	float factorControl = maxAngle / 480;			//Maximum maxAngle° (480 steps)
 	bool run = false, stop = false, log = false;
 	void calcPid();
+
+
 };
